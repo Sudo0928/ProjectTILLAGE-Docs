@@ -283,12 +283,13 @@ ProjectTILLAGE-Docs 내비게이션
 
 #### PostContent (글 상세 본문)
 
-| 필드         | 설명                   | 타입/관계                   |
-| ------------ | ---------------------- | --------------------------- |
-| postId       | 연결되는 Post ID       | → Post.id                   |
-| blocks       | Notion 블록 배열       | NotionBlock[]               |
-| coverImage   | 커버 이미지 URL (선택) | string \| null              |
-| lastEditedAt | 마지막 편집 시각       | ISO Date (← 최종 편집 일시) |
+| 필드         | 설명                           | 타입/관계                                            |
+| ------------ | ------------------------------ | ---------------------------------------------------- |
+| postId       | 연결되는 Post ID               | → Post.id                                            |
+| blocks       | Notion 블록 배열               | NotionBlock[] (= BlockObjectResponse alias, Task006) |
+| coverImage   | 커버 이미지 URL (선택)         | string \| null                                       |
+| lastEditedAt | 마지막 편집 시각               | ISO Date (← 최종 편집 일시)                          |
+| summary      | Notion 요약 속성 텍스트 (선택) | string \| null (F016 3단계 입력, Task006)            |
 
 #### Category (목록/필터용 파생 모델)
 
@@ -300,11 +301,12 @@ ProjectTILLAGE-Docs 내비게이션
 
 #### NotionBlock (블록 변환 입력)
 
-| 필드    | 설명            | 타입/관계                                                                                                             |
-| ------- | --------------- | --------------------------------------------------------------------------------------------------------------------- |
-| id      | 블록 ID         | string                                                                                                                |
-| type    | 블록 타입       | string (paragraph/heading_1~3/bulleted_list_item/numbered_list_item/image/code/quote/divider/table/toggle/callout 등) |
-| content | 타입별 페이로드 | unknown (Zod로 타입별 분기 검증)                                                                                      |
+> **Phase 2 Task 006 변경**: 독자 인터페이스(id/type/content) 제거 → `@notionhq/client`의 `BlockObjectResponse` 단순 alias로 변경.
+> `export type NotionBlock = BlockObjectResponse` — render-blocks.tsx / tldr-extractor.ts / reading-time.ts 모두 일관 사용.
+
+| 타입 정의                     | 설명                                                                        |
+| ----------------------------- | --------------------------------------------------------------------------- |
+| `BlockObjectResponse` (alias) | Notion SDK 블록 응답 타입 전체 — paragraph/heading/image/table 등 12종 지원 |
 
 ### 속성 매핑 표 (Notion 한글 ↔ 도메인 영문 키)
 

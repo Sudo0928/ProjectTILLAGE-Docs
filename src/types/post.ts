@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import type { BlockObjectResponse } from '@notionhq/client'
 
 /**
  * 도메인 타입 단일 소스 (Phase 2 데이터 레이어와 Phase 3 공통 UI 컴포넌트가 공유)
@@ -39,6 +40,7 @@ export interface PostContent {
   blocks: NotionBlock[]
   coverImage: string | null
   lastEditedAt: string // ← 최종 편집 일시 (last_edited_time)
+  summary: string | null // 신규 — F016 3단계 입력 (Phase 2 Task 006)
 }
 
 /**
@@ -51,13 +53,12 @@ export interface Category {
 }
 
 /**
- * Notion 블록 변환 입력 (Phase 2 Task 006에서 type별 zod 스키마로 좁힘)
+ * Notion 블록 변환 입력 — Phase 2 Task 006에서 BlockObjectResponse alias로 단순화
+ *
+ * 이전 독자 인터페이스(id/type/content)를 제거하고 @notionhq/client 타입을 직접 alias.
+ * render-blocks.tsx / tldr-extractor.ts / reading-time.ts 모두 BlockObjectResponse 일관 사용.
  */
-export interface NotionBlock {
-  id: string
-  type: string // paragraph/heading_1~3/bulleted_list_item/numbered_list_item/image/code/quote/divider/table/table_row/toggle/callout 등
-  content: unknown // type별 페이로드 — Phase 2에서 좁힘
-}
+export type NotionBlock = BlockObjectResponse
 
 /**
  * PostCard 컴포넌트가 사용하는 props 헬퍼 (Phase 3 Task 008)

@@ -139,6 +139,8 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 
 ### Phase 2: 데이터 레이어 (Notion 연동)
 
+> 진행률: Task 004/005/006 완료 ✅, Task 007 미시작
+
 Notion API 호출, 정규화, 캐시 정책을 한 번에 정리합니다. UI보다 우선해 처리해야 더미가 아닌 실데이터 흐름을 빠르게 검증할 수 있습니다.
 
 > ⚠️ **사용자 사전 작업 필수 (Phase 2 Task 005 시작 전)**
@@ -190,7 +192,10 @@ Notion API 호출, 정규화, 캐시 정책을 한 번에 정리합니다. UI보
   - **검증 결과**: `npm run check-all` ✅ + `npm run build` ✅ + Playwright MCP 4 시나리오 모두 통과 + 절대 금지 #6/#7/#9/#20 비위반 + 사용자 발행 글 1건 정상 노출 + 빈 데이터 graceful 처리
   - See: /docs/tasks/005-notion-data-functions.md
 
-- **Task 006: Notion 블록 → HTML 변환 + 작성 패턴 자동 변환 (F002/F016/F017/F018/F019)**
+- ✅ **Task 006: Notion 블록 → HTML 변환 + 작성 패턴 자동 변환 (F002/F016/F017/F018/F019)**
+  - shrimp ID: `f4ec809a-0f60-4174-9833-f00b5ab24ec6`
+  - **검증 결과**: ✅ check-all + build 통과 / tsx PASS 5+5 / Playwright ⑤⑥ 통과
+  - See: /docs/tasks/006-block-renderer-and-pattern-transform.md
   - 지원 블록: `paragraph`, `heading_1~3`, `bulleted_list_item`, `numbered_list_item`, `image`, `code`, `quote`, `divider`, `table`+`table_row`, `toggle`, `callout`
   - 텍스트 어노테이션(볼드/이탤릭/코드/링크) 처리
   - 이미지 블록 → `next/image` 호환 컴포넌트 출력 (커버 이미지 포함)

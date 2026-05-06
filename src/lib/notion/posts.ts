@@ -168,11 +168,8 @@ async function _getPostBySlugImpl(slug: string): Promise<PostResult> {
       block_id: pageId,
     })
 
-    const blocks: NotionBlock[] = rawBlocks.filter(isFullBlock).map(b => ({
-      id: b.id,
-      type: b.type,
-      content: b,
-    }))
+    // NotionBlock = BlockObjectResponse alias (Phase 2 Task 006)
+    const blocks: NotionBlock[] = rawBlocks.filter(isFullBlock)
 
     const coverImage =
       page.cover?.type === 'external'
@@ -181,12 +178,20 @@ async function _getPostBySlugImpl(slug: string): Promise<PostResult> {
           ? page.cover.file.url
           : null
 
+    // F016 3단계 입력 — Notion 요약 속성 plain_text
+    const summaryText = props.요약.rich_text
+      .map(t => t.plain_text)
+      .join('')
+      .trim()
+    const summary: string | null = summaryText.length > 0 ? summaryText : null
+
     return {
       post: {
         postId: page.id,
         blocks,
         coverImage,
         lastEditedAt: page.last_edited_time,
+        summary,
       },
       error: null,
     }
