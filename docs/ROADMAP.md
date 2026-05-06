@@ -85,24 +85,12 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 
 ### Phase 1: 애플리케이션 골격 구축 ✅
 
-라우트 구조와 빈 페이지 셸, 도메인 타입을 우선 확보하는 단계입니다. UI/데이터 작업이 병렬로 진행될 수 있도록 골격부터 완성합니다.
+> Phase 1 종료 (2026-05): 3개 Task 모두 완료(Task 001/002/003), M1 마일스톤(5개 라우트 + 헤더/푸터 일관) 충족. Phase 2/3 병렬 진행 가능 상태이며 실데이터 차단 의존은 Phase 2 Task 005부터 시작됩니다.
 
-> ⚠️ **사용자 사전 작업 필수 (Phase 1 Task 003 시작 전)**
-> Notion "기획서 모음" DB(`345bcbcfa9ea80b38ec5c777f19c3442`)에 다음 6개 속성을 사용자가 직접 추가해야 본 Phase Task 003 이후 모든 데이터 함수가 동작합니다.
->
-> | 속성명    | 타입         | 옵션/비고                                         |
-> | --------- | ------------ | ------------------------------------------------- |
-> | 웹 게시   | select       | "발행됨"(green) / "초안"(gray) — 사이트 노출 토글 |
-> | 발행일    | date         | start만 사용 — 정렬 기준                          |
-> | 태그      | multi_select | 자유 추가 — 카드 칩 + 검색 매칭                   |
-> | 요약      | rich_text    | 1~2 문장 — TL;DR fallback 소스                    |
-> | 독자 수준 | select       | "입문" / "중급" / "심화" — 진입 큐레이션 칩       |
-> | 추천 순위 | number       | 1~3 — "처음 오셨나요?" 우선순위                   |
->
-> 기존 6개 속성(항목/분류/상태/작성자/최종 편집 일시/상위·하위 항목)은 손대지 않습니다. **사이트 노출 여부는 신규 `웹 게시` 속성이 단독으로 결정**하며 기존 `상태`(시작 전/진행 중/완료)는 게임 기획 작업 진행도일 뿐 사이트 노출과 무관합니다.
+라우트 구조와 빈 페이지 셸, 도메인 타입을 우선 확보하는 단계입니다. UI/데이터 작업이 병렬로 진행될 수 있도록 골격부터 완성합니다. Task 003은 임시 fixture 기반 단위 검증으로 완료되었으며, 실제 Notion DB와의 연동 검증은 Phase 2 Task 005에서 수행됩니다.
 
 - ✅ **Task 001: 의존성 설치 및 타이포그래피 설정** - 완료
-  - shrimp ID: `9dfbd998` (Phase 1-001 의존성 설치 및 타이포그래피 설정)
+  - shrimp ID: `b7367d70-e9de-4f91-9bf1-55534b8a5c07` (Phase 1-001 의존성 설치 및 타이포그래피 설정)
   - `@notionhq/client` 설치 (Notion 공식 SDK)
   - `@tailwindcss/typography` 설치 후 `globals.css`에 plugin 등록 + `prose` 클래스 활용 가능 상태로 만들기
   - 본 MVP는 자체 블록 매핑(Task 006)을 사용하므로 `notion-to-md` 같은 외부 변환 라이브러리는 추가하지 않음 — Phase 2에서 직접 렌더러 구현
@@ -114,7 +102,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
   - See: /docs/tasks/001-deps-and-typography.md
 
 - ✅ **Task 002: 라우트 구조 및 빈 페이지 셸 생성** — 완료
-  - shrimp ID: `b3ef441d` (Phase 1-002 라우트 셸 및 RootLayout 헤더/푸터 통합)
+  - shrimp ID: `b3ef441d-2e15-4c1f-9284-15179377a350` (Phase 1-002 라우트 셸 및 RootLayout 헤더/푸터 통합)
   - `/` 홈 페이지(이미 존재) 골격 정리 (HERO/추천/페르소나/최근 글 4개 섹션 placeholder)
   - `/categories` 카테고리 인덱스 페이지 셸 추가
   - `/categories/[slug]` 카테고리 상세 페이지 셸 추가
@@ -129,7 +117,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
   - See: /docs/tasks/002-route-shell-and-layout.md
 
 - ✅ **Task 003: 도메인 타입, Zod 스키마, 큐레이션 모듈 정의 (v2 확장)** — 완료
-  - shrimp ID: `34264159` (Phase 1-003 도메인 타입 및 Zod 스키마 정의 — 신규 6개 속성 + persona-curation + site-config 포함)
+  - shrimp ID: `3207c9f4-d9cd-4ef3-8b02-987664410ca8` (Phase 1-003 도메인 타입 및 Zod 스키마 정의 — 신규 6개 속성 + persona-curation + site-config 포함)
   - `src/types/post.ts`에 다음 도메인 타입 정의:
     - `Post`: id / slug / title / summary? / category / tags / publishedAt / **publication**("발행됨"|"초안") / coverImage? / **readerLevel?**("입문"|"중급"|"심화"|null) / **recommendOrder?**(number|null)
     - `PostContent`: postId / blocks / coverImage? / lastEditedAt
@@ -141,9 +129,9 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
   - 검색 쿼리 파라미터(`SearchParams`) 타입과 Zod 검증 스키마(`q.trim().min(1).max(200)`) 정의. 검증 실패 메시지는 한국어
   - **신규 `src/lib/site-config.ts`**: HERO Logline ("5년 안에 감염으로 죽을 주인공이 작은 섬에서 농사를 짓고 섬 사람들과 인연을 쌓아 가면서 삶의 의미를 찾아가는 게임"), 분위기 카피, 사이트 기본 메타데이터 등 정적 상수 단일 소스
   - **신규 `src/lib/notion/persona-curation.ts`**: 5개 페르소나(아티스트/사운드 디자이너/외부 프로그래머/마케터/외부) ↔ 분류 묶음 정적 매핑. PRD "페르소나별 진입 시나리오" 표를 단일 모듈로 흡수. **5개 페르소나 모두 서로 다른 분류 묶음을 가져야 함** — 매핑 테스트로 보장
-  - **사용자 사전 작업 의존성**: 위 박스의 6개 Notion 속성 추가가 사전 완료되어야 함
+  - **사용자 사전 작업 의존성**: 본 Task는 임시 fixture로 검증 완료. 실제 Notion DB 6개 속성 추가는 Phase 2 Task 005 시작 전까지 필요(Phase 2 헤더 직후 박스 참조)
   - **산출물**: 데이터 레이어/UI가 공유할 단일 타입 소스 + 큐레이션 정적 모듈 2개(`site-config.ts`, `persona-curation.ts`)
-  - **의존성**: Task 002 완료, 사용자 Notion DB 6개 속성 추가 완료
+  - **의존성**: Task 002 완료
   - **검증 기준**: `npm run typecheck` 통과, Zod 스키마 단위 테스트(임시 fixture)로 한글 속성 8개 모두 파싱 성공, persona-curation 매핑이 5개 페르소나 × 서로 다른 분류 묶음을 가지는지 단순 단언
   - See: /docs/tasks/003-domain-types-and-curation.md
 
@@ -153,31 +141,54 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 
 Notion API 호출, 정규화, 캐시 정책을 한 번에 정리합니다. UI보다 우선해 처리해야 더미가 아닌 실데이터 흐름을 빠르게 검증할 수 있습니다.
 
-- **Task 004: Notion 클라이언트 및 환경 변수 가드 구현**
+> ⚠️ **사용자 사전 작업 필수 (Phase 2 Task 005 시작 전)**
+> Notion "기획서 모음" DB(`345bcbcfa9ea80b38ec5c777f19c3442`)에 다음 6개 속성을 사용자가 직접 추가해야 Task 005 이후 모든 데이터 함수가 동작합니다. Task 003(도메인 타입/Zod 스키마)은 임시 fixture로 완료되었으나, 실제 Notion 응답 정규화부터는 본 사전 작업이 필수 차단 의존입니다.
+>
+> | 속성명    | 타입         | 옵션/비고                                         |
+> | --------- | ------------ | ------------------------------------------------- |
+> | 웹 게시   | select       | "발행됨"(green) / "초안"(gray) — 사이트 노출 토글 |
+> | 발행일    | date         | start만 사용 — 정렬 기준                          |
+> | 태그      | multi_select | 자유 추가 — 카드 칩 + 검색 매칭                   |
+> | 요약      | rich_text    | 1~2 문장 — TL;DR fallback 소스                    |
+> | 독자 수준 | select       | "입문" / "중급" / "심화" — 진입 큐레이션 칩       |
+> | 추천 순위 | number       | 1~3 — "처음 오셨나요?" 우선순위                   |
+>
+> 기존 6개 속성(항목/분류/상태/작성자/최종 편집 일시/상위·하위 항목)은 손대지 않습니다. **사이트 노출 여부는 신규 `웹 게시` 속성이 단독으로 결정**하며 기존 `상태`(시작 전/진행 중/완료)는 게임 기획 작업 진행도일 뿐 사이트 노출과 무관합니다.
+
+- ✅ **Task 004: Notion 클라이언트 및 환경 변수 가드 구현** — 완료
+  - shrimp ID: `11bfc8e9-e4b8-4a3d-8b75-342b8989aff2` (Phase 2-004 Notion 클라이언트 및 환경 변수 가드 구현)
   - `src/lib/notion/client.ts`에 싱글톤 Notion 클라이언트 생성. 파일 상단에 `// 서버 전용 모듈 — 'use client' 파일에서 import 금지` 주석 추가 (shrimp-rules.md 5.4)
   - `NOTION_TOKEN` / `NOTION_DATABASE_ID` 미설정 시 친절한 한국어 에러 메시지를 던지는 `assertNotionEnv()` 가드 함수 추가. **빌드는 차단하지 않음** (env optional 정책)
-  - 모든 데이터 접근 함수가 동일한 클라이언트를 통해 호출되도록 일원화
-  - 로컬 `.env.local` 작성 가이드 보강 (`.env.local.example` 코멘트 정리)
-  - **산출물**: `src/lib/notion/client.ts`, `assertNotionEnv()` 헬퍼
-  - **의존성**: Task 003 완료
-  - **검증 기준**: 환경 변수 미설정 시 페이지 진입 시 ErrorState 노출, 콘솔에 한국어 안내 로그, 크래시/빌드 차단 없음
+  - 모든 데이터 접근 함수가 동일한 클라이언트를 통해 호출되도록 일원화 (Task 005 이후 `getNotionClient()` / `getNotionDatabaseId()` 단일 진입점 사용)
+  - 로컬 `.env.local` 작성 가이드는 Phase 0에서 정비된 `.env.local.example`이 적정하여 본 Task에서 추가 변경 없음
+  - **산출물**: `src/lib/notion/client.ts` (73줄, 3개 export — `assertNotionEnv` / `getNotionClient` / `getNotionDatabaseId`)
+  - **의존성**: Task 003 완료 ✅
+  - **검증 기준**: 환경 변수 미설정 시 페이지 진입 시 ErrorState 노출, 콘솔에 한국어 안내 로그, 크래시/빌드 차단 없음 — 본 Task에서는 throw 경로까지 검증, 실제 ErrorState UI 통합은 Phase 3 Task 008 + Phase 5 Task 016에서 회귀
+  - **검증 결과**: `npm run check-all` ✅ + `npm run build` ✅(env optional 정책 보존) + `process.env.NOTION` 직접 사용 0건 + `'use client'` 0건 + `cachedClient` 모듈 비공개
+  - See: /docs/tasks/004-notion-client-and-env-guard.md
 
-- **Task 005: 글 목록/상세/카테고리/검색/추천/관련 글 6개 데이터 함수 구현 (F001/F002/F003/F004/F015/F019)**
-  - `src/lib/notion/posts.ts`에 다음 6개 함수 구현 (각각 `웹 게시 === '발행됨'` 필터 필수, shrimp-rules.md 5.2):
-    - `getPublishedPosts()` (F001): `발행일` 내림차순 (발행일 미설정 시 `최종 편집 일시` fallback)
+- ✅ **Task 005: 글 목록/상세/카테고리/검색/추천/관련 글 7종 데이터 함수 구현 (F001/F002/F003/F004/F015/F019)** — 완료
+  - shrimp ID: `9c00c2f8-7a79-418f-a2a3-870c66edc60e` (Phase 2-005 Notion 7종 데이터 함수 구현)
+  - `src/lib/notion/posts.ts`에 다음 7종 함수 구현 (각각 `웹 게시 === '발행됨'` 필터 필수, shrimp-rules.md 5.2):
+    - `getPublishedPosts()` (F001): `발행일` 내림차순 (발행일 미설정 시 `최종 편집 일시` fallback, 인메모리 보정)
     - `getPostBySlug(slug)` (F002): 페이지 메타 + `blocks.children.list` 호출 후 정규화
     - `getCategories()` (F003): 단일 query로 모든 발행 글 fetch 후 메모리에서 분류별 글 수 집계 (17개 분류 분할 query 회피로 Notion rate limit 보호)
     - `getPostsByCategory(slug)` (F003): 슬러그 매칭 + 발행일 내림차순
-    - `searchPosts(query)` (F004): 제목/태그 부분 일치(소문자 정규화)
+    - `searchPosts(query)` (F004): 제목/태그 부분 일치 (소문자 정규화)
     - `getRecommendedPosts(limit)` (F015): `웹 게시 == '발행됨' AND 추천 순위 between 1 and 3` + 추천 순위 오름차순 + 동률 시 발행일 내림차순
     - `getRelatedPostsByCategory(category, currentId, limit)` (F019): `LIMIT (limit+1)` fetch 후 서버 측에서 `currentId` 제외, 최대 `limit`건 반환. **Notion API의 `does_not_equal` ID 필터 부재로 인한 클라이언트 후처리 패턴 강제**
-  - 결과 타입은 `{ posts, error }` 형식으로 빈 결과/실패를 호출부가 구분 가능하게 (shrimp-rules.md 5.5)
-  - `revalidate = 60` ISR 설정을 데이터 페치 함수 단위에 부여 (`fetch` 캐시 옵션 또는 `unstable_cache`)
-  - Notion 페이지 ID 기반 `slug` 생성 헬퍼 작성 (`src/lib/notion/slug.ts`)
-  - **Playwright MCP 테스트**: `/posts/[slug]` 라우트에 임시 페이지를 띄워 정규화 결과(제목/분류/태그/발행일/요약/독자 수준/추천 순위) 모두 노출되는지 확인. `웹 게시=초안` 글이 어떤 경로에서도 노출되지 않는지 회귀
-  - **산출물**: `src/lib/notion/posts.ts`, `src/lib/notion/categories.ts`, `src/lib/notion/slug.ts`
-  - **의존성**: Task 004 완료
-  - **검증 기준**: 6개 함수 모두 실제 Notion DB 응답을 정규화하여 도메인 타입에 맞는 결과 반환, `초안` 페이지 노출 0건
+  - **Notion SDK v5 핵심**: `databases.query` 대신 `dataSources.query({ data_source_id })` 사용. `getNotionDataSourceId()` async 헬퍼를 `client.ts`에 추가하여 env 값 캐시 (v5에서 `NOTION_DATABASE_ID`는 사실상 data source ID)
+  - 결과 타입은 `{ posts/post/categories, error }` 형식으로 빈 결과/실패를 호출부가 구분 가능하게 (shrimp-rules.md 5.5)
+  - 모든 fetch 함수에 `unstable_cache` wrapper 적용 (revalidate=60, tags) — 페이지 단위 ISR과 충돌 없음
+  - Notion 페이지 ID 기반 `slug` 생성 헬퍼 작성 (`src/lib/notion/slug.ts` — 4종: `slugFromPageId`/`pageIdFromSlug`/`slugFromCategoryName`/`categoryNameFromSlug`)
+  - `normalizePost(page)` 헬퍼: 8개 한글 속성 → Post 도메인 타입 매핑. Zod `z.enum` widening 우회 위해 `publication`/`readerLevel` 명시적 리터럴 narrowing (`as` 캐스팅 0회, non-null assertion 0회)
+  - **Playwright MCP 테스트 통과 (4건)**: `/search?q=test` (1건 결과), `/categories/핵심-정의-문서` (분류 1건 + 8개 속성 매핑), `/categories/test-category` (빈 분류 graceful 처리), `/posts/abc` (잘못된 슬러그 404 효과)
+  - `persona-curation.ts` 분류 이름 정합성 정정 — `'🎞️ 내러티브 기획'` → `'🎞️내러티브 기획'` (Notion 실제 옵션과 글자 단위 일치)
+  - **산출물**: `src/lib/notion/posts.ts` (270줄), `src/lib/notion/categories.ts` (80줄), `src/lib/notion/slug.ts` (80줄), `client.ts` 확장
+  - **의존성**: Task 004 완료 ✅
+  - **검증 기준**: 7종 함수 모두 실제 Notion DB 응답을 정규화하여 도메인 타입에 맞는 결과 반환, `초안` 페이지 노출 0건
+  - **검증 결과**: `npm run check-all` ✅ + `npm run build` ✅ + Playwright MCP 4 시나리오 모두 통과 + 절대 금지 #6/#7/#9/#20 비위반 + 사용자 발행 글 1건 정상 노출 + 빈 데이터 graceful 처리
+  - See: /docs/tasks/005-notion-data-functions.md
 
 - **Task 006: Notion 블록 → HTML 변환 + 작성 패턴 자동 변환 (F002/F016/F017/F018/F019)**
   - 지원 블록: `paragraph`, `heading_1~3`, `bulleted_list_item`, `numbered_list_item`, `image`, `code`, `quote`, `divider`, `table`+`table_row`, `toggle`, `callout`
@@ -392,8 +403,8 @@ PRD v2의 성공 지표(정량 + 정성)를 단계별 검증 항목으로 매핑
 
 | 마일스톤                            | 완료 기준                                                                                        | 측정 방법                                 | 관련 PRD 지표                        |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------- | ------------------------------------ |
-| **M0. 사전 준비 완료**              | Phase 0 완료 (스타터킷 정리)                                                                     | 수동 라우팅 점검                          | —                                    |
-| **M1. 골격 완료**                   | 5개 라우트 모두 404 없이 라우팅 + 헤더/푸터 일관 표시                                            | Playwright MCP 회귀                       | F001~F004 진입 가능                  |
+| **M0. 사전 준비 완료** ✅           | Phase 0 완료 (스타터킷 정리)                                                                     | 수동 라우팅 점검                          | —                                    |
+| **M1. 골격 완료** ✅                | 5개 라우트 모두 404 없이 라우팅 + 헤더/푸터 일관 표시                                            | Playwright MCP 회귀                       | F001~F004 진입 가능                  |
 | **M2. 데이터 흐름 확립**            | Notion 발행 글 1건이 홈/상세에 노출                                                              | Playwright MCP 시나리오                   | F001/F002                            |
 | **M3. 변환 로직 동작 확인**         | TL;DR 4단계 + 💡 인트로 + `[확정]`/`[임시]` 배지 + 미결 토글 + 연동 문서 카드 모두 의도대로 변환 | Playwright MCP + 실제 Notion 페이지 fetch | F016/F017/F018                       |
 | **M4. 비기획자 진입 큐레이션 완성** | HERO + "처음 오셨나요?" 3건 + "관심사로 골라보기" 5장 모두 표시                                  | 수동 점검 + Playwright MCP                | F015                                 |
@@ -433,4 +444,4 @@ PRD에 따라 MVP 범위에서 제외하며, 향후 우선순위만 정리합니
 - **F019 동일 분류 추천**: LIMIT 4 후 클라이언트 후처리 패턴 강제. Notion API의 `does_not_equal` ID 필터 부재로 인한 우회 — `getRelatedPostsByCategory` 시그니처에 `currentId` 인자 필수.
 - **F016 TL;DR 4단계 회귀 점검 의무**: 4단계 우선순위 + placeholder fall-through 누락 시 비기획자 진입 실패. Phase 5 Task 016에서 4가지 fixture 페이지로 회귀 점검 의무.
 - **다중 파일 동기화 누락 금지** (shrimp-rules.md 9): 의존성 추가/환경 변수/MVP 범위/네비게이션 변경 시 관련 문서 일괄 갱신.
-- **shrimp-rules.md 절대 금지 사항 18개 위반 금지**: 특히 `src/components/ui/*` 직접 수정, `process.env.*` 직접 사용, `'use client'`에서 `@notionhq/client` import, `웹 게시=초안` 페이지 노출, `max-w-*` 직접 사용, MVP 외 라우트 추가 금지.
+- **shrimp-rules.md 절대 금지 사항 23개 위반 금지**: 특히 `src/components/ui/*` 직접 수정, `process.env.*` 직접 사용, `'use client'`에서 `@notionhq/client` import, `웹 게시=초안` 페이지 노출, `max-w-*` 직접 사용, MVP 외 라우트 추가, F018 메모이즈 누락, F019 단일 query `id != currentId` 시도, F016 placeholder fall-through 누락, `Post.status` 영문 키 사용, `docs/PRD.archive.md`/`docs/ROADMAP.archive.md` 변경 금지.

@@ -1,209 +1,164 @@
 {
   "tasks": [
     {
-      "id": "b7367d70-e9de-4f91-9bf1-55534b8a5c07",
-      "name": "Phase 1-001 의존성 설치 및 타이포그래피 설정",
-      "description": "@notionhq/client(dependencies, Notion 공식 SDK)와 @tailwindcss/typography(devDependencies, prose 가독성)를 설치하고, TailwindCSS v4 CSS-first 엔진에 맞춰 src/app/globals.css에 @plugin '@tailwindcss/typography' 디렉티브를 등록해 prose 유틸을 활성화한다. shrimp-rules.md 9.2 다중 파일 동기화 규칙에 따라 package.json/README.md/CLAUDE.md/docs/PRD.md/docs/ROADMAP.md 5개 문서의 기술 스택 섹션을 동시에 갱신한다. 자체 블록 매핑은 Phase 2 Task 006에서 직접 구현하므로 notion-to-md 같은 외부 변환 라이브러리는 추가하지 않는다. 본 Task 종료 후 npm run check-all과 npm run build가 통과하고 임시 페이지에서 prose 클래스가 본문에 정상 적용되어야 한다.",
-      "notes": "TailwindCSS v4는 CSS-first 엔진이라 tailwind.config.js 없이 globals.css 안에서 @plugin 디렉티브 등록(INFERENCE - context7로 문법 검증 필수). .env.local 커밋 금지(절대 금지 #2), Husky 우회 금지(#3). 작업 완료 후 docs/tasks/001-deps-and-typography.md 생성. 사용자 글로벌 룰: 함수 주석 + camelCase. notion-to-md 외부 라이브러리 추가 절대 금지(자체 블록 매핑은 Phase 2 Task 006).",
-      "status": "completed",
+      "id": "f4ec809a-0f60-4174-9833-f00b5ab24ec6",
+      "name": "Phase 2-006 Notion 블록 렌더러 + 작성 패턴 자동 변환",
+      "description": "src/lib/notion/ 하위 5개 신규 모듈(section-utils.ts/tldr-extractor.ts/reading-time.ts/related-docs-fetcher.ts/render-blocks.tsx) 구현 + src/components/posts/ F017 3개 컴포넌트(callout-intro/table-cell-badge/missing-items-collapsible) 추가 + shadcn Collapsible 추가 + next.config.ts remotePatterns + types/post.ts PostContent.summary 추가 + posts.ts getPostBySlug 정규화 보강 + page.tsx 임시 통합 + tsx 검증 스크립트 + ROADMAP/PRD 동기화. F002 본문 렌더링 + F016 TL;DR 4단계 + placeholder fall-through + F017 패턴 변환(💡 콜아웃/[확정]/[임시] 배지/미결 토글) + F018 연동 문서 카드(unstable_cache 메모이즈, 비공개 멘션 숨김, 0개 영역 숨김) + F019 읽기 시간(한국어 분당 500자) 모두 본 Task에서 결정. 핵심 강제: 절대 금지 #19 F018 메모이즈 / #21 F016 fall-through / #9 비공개 멘션 노출 / #6 process.env 직접 사용 / #7 'use client' Notion SDK / #20 F019 단일 query.",
+      "notes": "strict 강제: TS strict, 'as' 캐스팅 금지, '!' non-null assertion 금지. 한국어 사용자 노출 문자열. cn() 헬퍼 일원화. 서버 전용 모듈 5개 모두 파일 상단 주석 강제. F018 unstable_cache 키 ['related-doc-meta'] 단일 + revalidate 60 + tags ['posts','related-docs']. F016 PLACEHOLDER_REGEX는 단일 소스 export(변형 금지). render-blocks 비동기로 has_children 재귀 fetch(깊이 3 제한). toggle children fetch는 1단계만 — 깊은 재귀 후속 Task. INFERENCE 명시: cache() 미병행 / NotionBlock children 미추가(render-blocks 비동기) / F017 컴포넌트 위치 (A) / Vitest 미설치(tsx 스크립트 + Playwright 혼합) / 사용자 추가 작업 안내(Test 페이지 시나리오 블록).",
+      "status": "in_progress",
       "dependencies": [],
-      "createdAt": "2026-05-06T14:04:52.756Z",
-      "updatedAt": "2026-05-06T14:25:33.755Z",
+      "createdAt": "2026-05-06T16:32:20.238Z",
+      "updatedAt": "2026-05-06T16:34:33.909Z",
       "relatedFiles": [
         {
-          "path": "package.json",
-          "type": "TO_MODIFY",
-          "description": "@notionhq/client(dependencies), @tailwindcss/typography(devDependencies) 추가"
-        },
-        {
-          "path": "package-lock.json",
-          "type": "TO_MODIFY",
-          "description": "npm install 결과 자동 갱신"
-        },
-        {
-          "path": "src/app/globals.css",
-          "type": "TO_MODIFY",
-          "description": "@plugin @tailwindcss/typography 디렉티브 등록",
-          "lineStart": 1,
-          "lineEnd": 5
-        },
-        {
-          "path": "README.md",
-          "type": "TO_MODIFY",
-          "description": "기술 스택 섹션에 두 의존성 추가"
-        },
-        {
-          "path": "CLAUDE.md",
-          "type": "TO_MODIFY",
-          "description": "핵심 기술 스택 섹션에 두 의존성 추가"
-        },
-        {
-          "path": "docs/PRD.md",
-          "type": "TO_MODIFY",
-          "description": "기술 스택 섹션에 두 의존성 추가"
-        },
-        {
-          "path": "docs/ROADMAP.md",
-          "type": "TO_MODIFY",
-          "description": "Phase 1 Task 001 체크박스 ✅ + tasks/001 참조"
-        },
-        {
-          "path": "shrimp-rules.md",
-          "type": "REFERENCE",
-          "description": "9.2 다중 파일 동기화 규칙 + 절대 금지 사항"
-        },
-        {
-          "path": "src/app/page.tsx",
-          "type": "REFERENCE",
-          "description": "임시 prose 검증 위치"
-        }
-      ],
-      "implementationGuide": "1) context7 MCP로 v4 typography 등록 문법 검증: mcp__context7__resolve-library-id '@tailwindcss/typography' → mcp__context7__query-docs 'How to register typography plugin in TailwindCSS v4 CSS-first engine'. 2) 의존성 설치: npm install @notionhq/client / npm install -D @tailwindcss/typography. 3) src/app/globals.css의 '@import tw-animate-css;' 다음 라인에 @plugin '@tailwindcss/typography'; 추가. 4) 임시 검증 - src/app/page.tsx에 <article className=\"prose dark:prose-invert\">로 임시 감싸 npm run dev에서 시각 확인 후 원복(또는 Task 002 셸 페이지에서 동일 검증). 5) 다중 파일 동기화(shrimp-rules.md 9.2): package.json은 자동 갱신, README.md '기술 스택' 섹션 / CLAUDE.md '🛠️ 핵심 기술 스택' 섹션 / docs/PRD.md '기술 스택' 섹션 / docs/ROADMAP.md Phase 1 Task 001 ✅ + 'See: /docs/tasks/001-deps-and-typography.md' 참조 추가. 6) 최종 검증 npm run check-all + npm run build (Turbopack) 통과 확인.",
-      "verificationCriteria": "(1) package.json에 @notionhq/client과 @tailwindcss/typography 모두 추가됨, (2) src/app/globals.css에 @plugin @tailwindcss/typography 라인 정상 등록, (3) npm run check-all 통과(typecheck+lint+format:check), (4) npm run build (Turbopack) 성공, (5) 임시 페이지에서 prose 클래스가 본문에 적용되어 heading/paragraph/list 스타일 시각적 확인 후 원복, (6) 5개 문서(package.json/README.md/CLAUDE.md/docs/PRD.md/docs/ROADMAP.md) 모두 두 의존성이 일관 반영됨, (7) docs/tasks/001-deps-and-typography.md 작성 완료.",
-      "analysisResult": "Phase 1: 애플리케이션 골격 구축 — ROADMAPv2의 Phase 1을 3 Task로 분해. M1 마일스톤(5 라우트 + 헤더/푸터 일관) 달성. Phase 0 완료 위에서 시작하며 Phase 0 미완료 2건(@notionhq/client + @tailwindcss/typography 미설치, RootLayout 헤더/푸터 미통합)을 Task 001/002로 처리. 절대 금지 사항 회피 키 항목: #5(ui 직접수정), #6(process.env 직접), #7('use client'에서 @notionhq/client), #11(MVP 외 라우트), #13(max-w-* 직접), #14(클래스 템플릿 결합), #22(Post.status 영문 키). 다중 파일 동기화: Task 001 시 5개 문서(package.json/README.md/CLAUDE.md/docs/PRD.md/docs/ROADMAP.md), Task 003 시 PRD 속성 매핑 표 단일 진실 소스 일치. INFERENCE 항목(siteConfig.moodCaption 임시 카피, external 페르소나 emoji, personaCuration categories 정확성)은 코멘트로 명시 후 사용자 확정 권장. 사용자 사전 작업(Notion DB 6개 신규 속성 추가)은 Task 003 fixture 검증으로 우회 가능, Phase 2 Task 005부터 차단 의존. Pseudocode 기준 구현 가이드 제공.",
-      "summary": "Phase 1-001 완료. (1) @notionhq/client@^5.20.0 / @tailwindcss/typography@^0.5.19 설치 완료. (2) src/app/globals.css 3행에 @plugin '@tailwindcss/typography' 등록 - context7 MCP /tailwindlabs/tailwindcss-typography로 v4 CSS-first 문법 FACT 확립(INFERENCE 해소). (3) CLAUDE.md/docs/ROADMAP.md 동기화(Phase 0 미완료 #1 → ✅ 전환, Task 001 ✅ + tasks/001 참조), README.md/docs/PRD.md는 이미 정확히 명시되어 중복 추가 회피. (4) npm run check-all 통과, npm run build(Turbopack 1452ms, 정적 5/5, CSS 16.3kB) 성공. (5) prose 시각 검증은 Task 002 셸 페이지에서 후속 진행(옵션 B deferral) - 산출물 docs/tasks/001-deps-and-typography.md에 명시. (6) 부수: 스타터킷 누적 Prettier 미적용 50개 파일을 npm run format으로 일괄 정리(working tree에 별도 변경으로 남음, commit 시점에 분리 처리 권장).",
-      "completedAt": "2026-05-06T14:25:33.753Z"
-    },
-    {
-      "id": "b3ef441d-2e15-4c1f-9284-15179377a350",
-      "name": "Phase 1-002 5개 라우트 셸 생성 및 RootLayout 헤더 푸터 통합",
-      "description": "ROADMAP의 5개 MVP 라우트 (/, /categories, /categories/[slug], /search, /posts/[slug])에 대응하는 페이지 셸을 생성하고, src/app/layout.tsx에 Header/Footer를 통합해 Phase 0 미완료 항목 #2를 해결한다. 검색 페이지(/search)는 export const dynamic = 'force-dynamic', 나머지 4개 페이지는 export const revalidate = 60(ISR)으로 캐시 전략을 분기 명시한다(shrimp-rules.md 5.3). /posts/[slug]는 generateMetadata 자리만 정의(빈 메타 반환, Phase 5 Task 014에서 본격). 모든 페이지 본문은 @/components/layout/container의 Container로 감싸 max-w-* 직접 사용을 회피한다(절대 금지 #13). RootLayout body에 'flex min-h-screen flex-col' 클래스를 추가해 sticky footer 패턴을 보장하고 main 요소에 'flex-1' 부여한다. 시맨틱 마크업(<main>, <article>) 도입으로 Phase 5 Task 015 접근성 점검 사전 준비.",
-      "notes": "Next.js 15는 params/searchParams가 Promise로 전달 - await 필수(FACT). 페이지 max-w-* 직접 사용 금지(절대 금지 #13) - Container 강제. MVP 외 라우트(/login, /admin, /edit, /[locale], /rss.xml 등) 추가 절대 금지(#11). 한국어 노출 문자열 강제(#12). main-nav.tsx/mobile-nav.tsx의 navItems는 변경 없음(현재 [홈, 카테고리]). 검색바 + 동적 카테고리 메뉴는 Phase 3 Task 009에서. Header가 'use client' 컴포넌트지만 layout(서버 컴포넌트)에서 import 가능 - 정상 패턴. Header sticky-top과 페이지 Container는 별도 인스턴스이므로 시각 충돌 없음.",
-      "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "b7367d70-e9de-4f91-9bf1-55534b8a5c07"
-        }
-      ],
-      "createdAt": "2026-05-06T14:04:52.756Z",
-      "updatedAt": "2026-05-06T14:37:26.660Z",
-      "relatedFiles": [
-        {
-          "path": "src/app/layout.tsx",
-          "type": "TO_MODIFY",
-          "description": "Header/Footer/main 통합, body sticky footer 패턴 클래스 추가",
-          "lineStart": 1,
-          "lineEnd": 46
-        },
-        {
-          "path": "src/app/page.tsx",
-          "type": "TO_MODIFY",
-          "description": "revalidate=60 추가, 4개 섹션 placeholder 코멘트",
-          "lineStart": 1,
-          "lineEnd": 22
-        },
-        {
-          "path": "src/app/categories/page.tsx",
+          "path": "src/lib/notion/section-utils.ts",
           "type": "CREATE",
-          "description": "ISR 카테고리 인덱스 셸"
+          "description": "공통 유틸 — extractSectionsByHeading + extractPlainText + getRichTextFromBlock 3개 export"
         },
         {
-          "path": "src/app/categories/[slug]/page.tsx",
+          "path": "src/lib/notion/tldr-extractor.ts",
           "type": "CREATE",
-          "description": "ISR 카테고리 상세 셸 (Next.js 15 async params)"
+          "description": "F016 — PLACEHOLDER_REGEX export + extractTldr(blocks, summary) 4단계 fall-through"
         },
         {
-          "path": "src/app/search/page.tsx",
+          "path": "src/lib/notion/reading-time.ts",
           "type": "CREATE",
-          "description": "동적 검색 결과 셸 (searchParams Promise)"
+          "description": "F019 — calculateReadingTime(blocks) 한국어 분당 500자, 최소 1분"
+        },
+        {
+          "path": "src/lib/notion/related-docs-fetcher.ts",
+          "type": "CREATE",
+          "description": "F018 — getRelatedDocs(blocks) + unstable_cache 메모이즈된 멘션 메타 fetcher (절대 금지 #19)"
+        },
+        {
+          "path": "src/lib/notion/render-blocks.tsx",
+          "type": "CREATE",
+          "description": "F002 + F017 — Notion 블록 → React JSX 변환 비동기 서버 컴포넌트(has_children 재귀 fetch 깊이 3) + F017 패턴 자동 적용"
+        },
+        {
+          "path": "src/components/posts/callout-intro.tsx",
+          "type": "CREATE",
+          "description": "F017 — 💡 콜아웃 인트로 박스 (파란 배경 + not-prose)"
+        },
+        {
+          "path": "src/components/posts/table-cell-badge.tsx",
+          "type": "CREATE",
+          "description": "F017 — [확정]/[임시] 색상 배지 (success 녹색 / warning 노랑)"
+        },
+        {
+          "path": "src/components/posts/missing-items-collapsible.tsx",
+          "type": "CREATE",
+          "description": "F017 — 미결 사항 토글 ('use client', Collapsible defaultOpen=false, 헤더 🚧 기획자 작업 중)"
+        },
+        {
+          "path": "src/components/ui/collapsible.tsx",
+          "type": "CREATE",
+          "description": "shadcn collapsible CLI로 자동 생성 — radix-ui 의존만 추가"
+        },
+        {
+          "path": "src/lib/notion/__verify/tldr-fixtures.ts",
+          "type": "CREATE",
+          "description": "F016 4단계 fall-through 단위 검증 — npx tsx 일회성 실행 콘솔 PASS/FAIL"
+        },
+        {
+          "path": "src/lib/notion/__verify/reading-time-fixtures.ts",
+          "type": "CREATE",
+          "description": "F019 글자 수 단위 검증 — npx tsx 일회성 실행"
+        },
+        {
+          "path": "docs/tasks/006-block-renderer-and-pattern-transform.md",
+          "type": "CREATE",
+          "description": "본 Task 명세 — 수락 기준 체크박스 + 변경 사항 요약 + 테스트 체크리스트 + INFERENCE + 사용자 추가 작업 안내"
+        },
+        {
+          "path": "src/types/post.ts",
+          "type": "TO_MODIFY",
+          "description": "PostContent.summary: string | null 추가 (F016 3단계 입력 경로 단순화)",
+          "lineStart": 36,
+          "lineEnd": 42
+        },
+        {
+          "path": "src/lib/notion/posts.ts",
+          "type": "TO_MODIFY",
+          "description": "getPostBySlug 정규화에 props.요약 → PostContent.summary 포함 (Task 005 _getPostBySlugImpl 일부 보강)",
+          "lineStart": 147,
+          "lineEnd": 197
         },
         {
           "path": "src/app/posts/[slug]/page.tsx",
-          "type": "CREATE",
-          "description": "ISR 글 상세 셸 + generateMetadata 자리"
+          "type": "TO_MODIFY",
+          "description": "임시 통합 — extractTldr + calculateReadingTime + getRelatedDocs + renderBlocks 호출 (Phase 4 Task 013 본격 UI 마커 유지)",
+          "lineStart": 1,
+          "lineEnd": 67
         },
         {
-          "path": "src/components/layout/header.tsx",
-          "type": "DEPENDENCY",
-          "description": "이미 존재 - layout에서 import만"
+          "path": "next.config.ts",
+          "type": "TO_MODIFY",
+          "description": "images.remotePatterns에 Notion file 호스트(prod-files-secure.s3.us-west-2.amazonaws.com) 추가",
+          "lineStart": 1,
+          "lineEnd": 40
         },
         {
-          "path": "src/components/layout/footer.tsx",
-          "type": "DEPENDENCY",
-          "description": "이미 존재 - layout에서 import만"
-        },
-        {
-          "path": "src/components/layout/container.tsx",
-          "type": "DEPENDENCY",
-          "description": "5개 페이지 모두 사용"
+          "path": "docs/PRD.md",
+          "type": "TO_MODIFY",
+          "description": "도메인 타입 표 PostContent.summary 1줄 갱신 (9.6 동기화)"
         },
         {
           "path": "docs/ROADMAP.md",
           "type": "TO_MODIFY",
-          "description": "Task 002 체크박스 ✅ + 참조"
+          "description": "Task 006 ✅ + shrimp ID + See: docs/tasks/006-block-renderer-and-pattern-transform.md + Phase 2 진행률",
+          "lineStart": 193,
+          "lineEnd": 224
+        },
+        {
+          "path": "src/lib/notion/client.ts",
+          "type": "REFERENCE",
+          "description": "getNotionClient 재사용 — F018 fetcher에서 호출"
+        },
+        {
+          "path": "src/lib/notion/schemas.ts",
+          "type": "REFERENCE",
+          "description": "notionPagePropertiesSchema 재사용 — F018 멘션 메타 정규화"
+        },
+        {
+          "path": "src/lib/notion/slug.ts",
+          "type": "REFERENCE",
+          "description": "slugFromPageId 재사용 — RelatedDocMeta.slug 생성"
+        },
+        {
+          "path": "src/lib/notion/categories.ts",
+          "type": "REFERENCE",
+          "description": "기존 패턴 일관성 참고"
         },
         {
           "path": "shrimp-rules.md",
           "type": "REFERENCE",
-          "description": "5.3 캐시 전략 분기, 7.1 라우트 표, 절대 금지 #11/#13"
-        }
-      ],
-      "implementationGuide": "A) RootLayout 통합 - src/app/layout.tsx 수정: Header/Footer import 추가, body className에 'flex min-h-screen flex-col' 추가, ThemeProvider 안에 <Header /> + <main className=\"flex-1\">{children}</main> + <Footer /> + <Toaster /> 순서 배치. Header/Footer는 자체 Container 보유하므로 layout 레벨에서 추가 Container 금지. B) src/app/page.tsx 수정 - export const revalidate = 60 추가, 4개 섹션 한국어 placeholder 코멘트 (HERO F015 Phase 4 Task 010 / 처음 오셨나요 F015 / 관심사로 골라보기 F015 / 최근 글 카드 그리드 F001). C) src/app/categories/page.tsx 신규 - revalidate=60 + Container + h1 '분류 인덱스' + F003 placeholder. D) src/app/categories/[slug]/page.tsx 신규 - revalidate=60 + Next.js 15 async params (params: Promise<{slug: string}>) + Container + h1 '분류: {decodeURIComponent(slug)}' + placeholder. E) src/app/search/page.tsx 신규 - dynamic='force-dynamic' + searchParams: Promise<{q?:string}> + Container + h1 '검색 결과' + 검색어 placeholder. F) src/app/posts/[slug]/page.tsx 신규 - revalidate=60 + generateMetadata async (빈 메타 반환, Phase 5에서 본격) + <article> 시맨틱 + Container + h1 + placeholder. G) Playwright MCP 검증 - mcp__playwright__browser_navigate × 5 (/, /categories, /categories/test-slug, /search?q=test, /posts/test-slug) + mcp__playwright__browser_snapshot으로 헤더 → 본문 → 푸터 + Container 확인, 콘솔 에러 0건/200 응답/한국어 UI. H) ROADMAP Task 002 ✅ + 'See: /docs/tasks/002-route-shell-and-layout.md' 참조 추가.",
-      "verificationCriteria": "(1) 5개 라우트 모두 Playwright MCP로 진입 시 200 응답, (2) 모든 페이지에서 Header(sticky-top, ProjectTILLAGE 로고, 카테고리 메뉴) + Footer(한 줄 텍스트) 일관 표시, (3) 5개 페이지 모두 Container 래핑 (max-w-* 직접 사용 0건 grep 검증), (4) /search만 dynamic='force-dynamic', 나머지 4개는 revalidate=60 명시, (5) /posts/[slug]에 generateMetadata 함수 정의(빈 메타 반환), (6) Next.js 15 async params 패턴 적용(params/searchParams await), (7) 콘솔 에러 0건, (8) npm run check-all + build 통과, (9) M1 마일스톤(골격 완료) 충족, (10) docs/tasks/002-route-shell-and-layout.md 작성 완료.",
-      "analysisResult": "Phase 1: 애플리케이션 골격 구축 — ROADMAPv2의 Phase 1을 3 Task로 분해. M1 마일스톤(5 라우트 + 헤더/푸터 일관) 달성. Phase 0 완료 위에서 시작하며 Phase 0 미완료 2건(@notionhq/client + @tailwindcss/typography 미설치, RootLayout 헤더/푸터 미통합)을 Task 001/002로 처리. 절대 금지 사항 회피 키 항목: #5(ui 직접수정), #6(process.env 직접), #7('use client'에서 @notionhq/client), #11(MVP 외 라우트), #13(max-w-* 직접), #14(클래스 템플릿 결합), #22(Post.status 영문 키). 다중 파일 동기화: Task 001 시 5개 문서(package.json/README.md/CLAUDE.md/docs/PRD.md/docs/ROADMAP.md), Task 003 시 PRD 속성 매핑 표 단일 진실 소스 일치. INFERENCE 항목(siteConfig.moodCaption 임시 카피, external 페르소나 emoji, personaCuration categories 정확성)은 코멘트로 명시 후 사용자 확정 권장. 사용자 사전 작업(Notion DB 6개 신규 속성 추가)은 Task 003 fixture 검증으로 우회 가능, Phase 2 Task 005부터 차단 의존. Pseudocode 기준 구현 가이드 제공.",
-      "summary": "Phase 1-002 완료, M1 마일스톤 충족. (1) src/app/layout.tsx에 Header/Footer 통합 + body 'flex min-h-screen flex-col' sticky footer 패턴 + main flex-1, Toaster 위치 유지. (2) 5개 라우트 셸 모두 생성: /(revalidate=60, 4 섹션 placeholder) / /categories(ISR) / /categories/[slug](ISR + Next.js 15 async params + decodeURIComponent) / /search(force-dynamic + searchParams Promise) / /posts/[slug](ISR + generateMetadata 자리 + prose article + 4 placeholder 코멘트). (3) Playwright MCP로 5 URL 모두 200 응답 + 헤더(sticky-top, ProjectTILLAGE 로고, 홈/카테고리 메뉴) + 푸터(한 줄 텍스트) 일관 표시 + 콘솔 에러 0건 + prose 시각 검증(/posts/test-slug에서 heading/paragraph/mx-auto 확인) → Task 001 deferral 옵션 B 해소. (4) npm run check-all 통과(.playwright-mcp/와 shrimp_data/tasks.json을 .prettierignore에 추가 후), npm run build(Turbopack) 성공: /, /categories는 ○ 정적 ISR, /categories/[slug], /posts/[slug]는 ƒ 동적(generateStaticParams 미정의 - Phase 4 데이터 페치 추가 시 ISR 활성화 예정), /search는 ƒ 동적(force-dynamic). (5) docs/tasks/002-route-shell-and-layout.md 작성 완료(수락 기준 10/10 ✅), docs/ROADMAP.md 갱신(Phase 0 미완료 #2 ✅, Task 002 ✅ + tasks/002 참조). (6) Phase 2/3 진입 가능 상태 — Phase 2 Task 004 데이터 함수가 ISR 60s 활성화하면 동적 라우트 자동 정적화. main-nav/mobile-nav navItems 변경 없음(Phase 3 Task 009에서). 절대 금지 사항 #11/#13/#14/#16 모두 회피 검증.",
-      "completedAt": "2026-05-06T14:37:26.658Z"
-    },
-    {
-      "id": "3207c9f4-d9cd-4ef3-8b02-987664410ca8",
-      "name": "Phase 1-003 도메인 타입 Zod 스키마 큐레이션 모듈 정의",
-      "description": "Phase 2 데이터 레이어와 Phase 3 UI 컴포넌트가 공유할 단일 도메인 타입 소스(src/types/post.ts), Notion 응답 정규화 Zod 스키마(src/lib/notion/schemas.ts), F015 비기획자 진입 큐레이션의 정적 상수 모듈 2개(src/lib/site-config.ts, src/lib/notion/persona-curation.ts)를 신규 생성한다. 도메인 타입은 절대 금지 사항 #22에 따라 Post.publication 영문 키를 강제하여 Notion 한글 '상태'(status 타입, 게임 기획 작업 진행도)와 신규 '웹 게시'(select 타입, 사이트 노출 토글)를 명확히 분리한다. Zod 스키마는 PRD '속성 매핑 표' 8개 한글 속성(항목/분류/태그/발행일/웹 게시/요약/독자 수준/추천 순위)을 글자 단위로 매핑한다. 검색 쿼리 파라미터(SearchParams)도 본 Task에서 Zod 검증 스키마로 정의(q.trim().min(1).max(200), 한국어 검증 실패 메시지). 페르소나 큐레이션은 5개 페르소나 모두 서로 다른 분류 묶음을 가지며 매핑 단언 헬퍼 함수로 보장한다. 사용자 사전 작업(Notion DB 6개 신규 속성 추가)은 Phase 2 Task 005부터 차단 의존이며 본 Task는 fixture 검증으로 진행 가능.",
-      "notes": "사용자 글로벌 룰: camelCase + 함수 주석. INFERENCE 항목 코멘트 명시 - (1) siteConfig.hero.moodCaption '포스트 아포칼립스 농사+생존 — 짧은 삶 속에서 의미를 찾아가는 이야기' 임시값(사용자 확정 권장), (2) external 페르소나 emoji 🌟 임시값(PRD 미명시), (3) personaCuration[].categories 분류 이름은 PRD 표 추론 - Notion 실제 옵션과 글자 단위 일치 확인 필수. claude_ai_Notion MCP의 notion-fetch로 DB 메타 사전 점검 권장(의무 아님). Phase 2 Task 005부터 실제 DB 응답 필요 - 사용자 사전 작업 완료 시점이 곧 Phase 2 시작 시점. NotionBlock.content는 unknown 유지(Phase 2 Task 006에서 type별 zod 좁힘). 절대 금지 회피: #6(process.env 직접 - env 모듈만), #7('use client'에서 @notionhq/client - 본 Task 클라이언트 import 없음), #22(Post.status 영문 키 - publication 강제). Phase 1 종료 시 Phase 1 헤더 ✅ + Phase 2/3 진입 가능 상태.",
-      "status": "completed",
-      "dependencies": [
-        {
-          "taskId": "b3ef441d-2e15-4c1f-9284-15179377a350"
-        }
-      ],
-      "createdAt": "2026-05-06T14:04:52.756Z",
-      "updatedAt": "2026-05-06T14:50:36.029Z",
-      "relatedFiles": [
-        {
-          "path": "src/types/post.ts",
-          "type": "CREATE",
-          "description": "도메인 타입 단일 소스 + searchParamsSchema"
-        },
-        {
-          "path": "src/lib/notion/schemas.ts",
-          "type": "CREATE",
-          "description": "Notion 응답 정규화 Zod 스키마 (8개 한글 속성)"
-        },
-        {
-          "path": "src/lib/site-config.ts",
-          "type": "CREATE",
-          "description": "F015 HERO Logline + 사이트 기본 메타 정적 상수"
-        },
-        {
-          "path": "src/lib/notion/persona-curation.ts",
-          "type": "CREATE",
-          "description": "F015 5개 페르소나 ↔ 서로 다른 분류 묶음 매핑 + assertDistinctPersonaCategorySets"
-        },
-        {
-          "path": "src/lib/env.ts",
-          "type": "REFERENCE",
-          "description": "환경 변수 단일 진입점 - Phase 2부터 활용"
+          "description": "5.4(서버 전용)/5.5(함수 위치)/5.6(메모이즈/fall-through 강제)/6.1(shadcn MCP 흐름)/9.6(DB 스키마 동기화)/11(절대 금지 #6/#7/#9/#19/#21) 강제 규칙 단일 소스"
         },
         {
           "path": "docs/PRD.md",
           "type": "REFERENCE",
-          "description": "속성 매핑 표 + 페르소나별 진입 시나리오 표 (단일 진실 소스)"
+          "description": "F016 4단계 우선순위 + PLACEHOLDER_REGEX + F017 패턴 + F018 비공개 멘션 + F019 읽기 시간 정의 단일 소스"
         },
         {
-          "path": "shrimp-rules.md",
+          "path": "docs/tasks/005-notion-data-functions.md",
           "type": "REFERENCE",
-          "description": "5.2 도메인 타입 명명 + 9.6 Notion DB 스키마 동기화 + 절대 금지 #22"
+          "description": "직전 완료 Task — 7종 데이터 함수 + getPostBySlug 동작 패턴"
         },
         {
-          "path": "docs/ROADMAP.md",
-          "type": "TO_MODIFY",
-          "description": "Task 003 ✅ + Phase 1 헤더 ✅ + 참조"
+          "path": "package.json",
+          "type": "DEPENDENCY",
+          "description": "shadcn collapsible 추가 시 자동 갱신 — radix-ui 이미 설치됨, 신규 의존성 최소"
+        },
+        {
+          "path": ".env.local",
+          "type": "DEPENDENCY",
+          "description": "NOTION_TOKEN + NOTION_DATABASE_ID — F018 fetcher 동작 차단 의존"
         }
       ],
-      "implementationGuide": "A) src/types/post.ts 신규 - 한글 ↔ 영문 키 매핑은 docs/PRD.md '속성 매핑 표' 단일 진실 소스. Post.publication 영문 키 강제(절대 금지 #22). Publication=발행됨|초안, ReaderLevel=입문|중급|심화 타입. Post 인터페이스: id/slug/title/summary|null/category/tags/publishedAt/publication/coverImage|null/readerLevel|null/recommendOrder|null. PostContent: postId/blocks/coverImage/lastEditedAt. Category: name(이모지 포함)/slug/postCount. NotionBlock: id/type/content(unknown - Phase 2 Task 006에서 좁힘). PostCardProps = Pick<Post, ...>. searchParamsSchema = z.object({ q: z.string().trim().min(1, '검색어를 입력해주세요').max(200, '검색어는 200자를 넘을 수 없습니다') }) + SearchParams = z.infer. B) src/lib/notion/schemas.ts 신규 - 8개 한글 속성 매핑. Helper: titleProp/richTextProp/dateProp/numberProp/multiSelectProp 공통, selectPropEnum<T extends [string,...string[]]>(values: T) 제네릭, selectPropAny. notionPagePropertiesSchema = z.object({ '항목': titleProp, '분류': selectPropAny, '태그': multiSelectProp, '발행일': dateProp, '웹 게시': selectPropEnum(['발행됨','초안']), '요약': richTextProp, '독자 수준': selectPropEnum(['입문','중급','심화']), '추천 순위': numberProp }). C) src/lib/site-config.ts 신규 - siteConfig as const: name/description/hero.logline (PRD Logline 정확히 일치)/hero.moodCaption(INFERENCE 코멘트)/defaultMetadata(titleTemplate, defaultTitle). D) src/lib/notion/persona-curation.ts 신규 - PersonaSlug type, Persona interface(slug/emoji/title/hookCopy/categories readonly), personaCuration as const satisfies readonly Persona[] 5개 페르소나 (artist 🎨 [📹 비주얼 기획, 🎨 UI/UX 기획], sound 🎶 [🎶 사운드 기획, 🎞️ 내러티브 기획], programmer ⚙️ [📌 핵심 정의 문서, ⚙️ 시스템 기획, 🛠️ 기술 기획], marketer 🪙 [🛫 방향성 기획, 🪙 수익화 기획], external 🌟 [📌 핵심 정의 문서, 📹 비주얼 기획]). assertDistinctPersonaCategorySets() 헬퍼: categories sort 후 JSON.stringify 핑거프린트 → Set으로 중복 검출, 중복 시 한국어 에러 throw. E) 검증 - (1) npm run typecheck 통과, (2) 임시 fixture로 8개 한글 속성 모두 포함된 가짜 Notion 페이지 properties JSON → notionPagePropertiesSchema.parse() 성공/실패(누락 속성 시 zod error) 양쪽 확인, (3) assertDistinctPersonaCategorySets() 호출 통과, (4) searchParamsSchema.parse({q:''}) 시 '검색어를 입력해주세요' 에러, parse({q:'a'.repeat(201)}) 시 '검색어는 200자를 넘을 수 없습니다' 에러. F) ROADMAP Phase 1 Task 003 ✅ → Phase 1 헤더 ✅ + 'See: /docs/tasks/003-domain-types-and-curation.md' 참조 추가.",
-      "verificationCriteria": "(1) 4개 신규 파일 모두 생성됨 (src/types/post.ts, src/lib/notion/schemas.ts, src/lib/site-config.ts, src/lib/notion/persona-curation.ts), (2) Post 인터페이스에 publication 영문 키 사용(grep으로 'Post.status' 사용 0건 검증), (3) PRD 속성 매핑 표 8개 한글 속성 모두 schemas.ts에 매핑됨, (4) searchParamsSchema 한국어 검증 실패 메시지 동작, (5) personaCuration 5개 페르소나 모두 정의 + assertDistinctPersonaCategorySets() 호출 통과, (6) siteConfig.hero.logline에 PRD Logline 정확히 일치, (7) npm run typecheck 통과, (8) 임시 fixture로 notionPagePropertiesSchema.parse() 성공/실패 양쪽 검증 완료, (9) Phase 1 헤더 ✅ 및 ROADMAP 갱신, (10) docs/tasks/003-domain-types-and-curation.md 작성 완료.",
-      "analysisResult": "Phase 1: 애플리케이션 골격 구축 — ROADMAPv2의 Phase 1을 3 Task로 분해. M1 마일스톤(5 라우트 + 헤더/푸터 일관) 달성. Phase 0 완료 위에서 시작하며 Phase 0 미완료 2건(@notionhq/client + @tailwindcss/typography 미설치, RootLayout 헤더/푸터 미통합)을 Task 001/002로 처리. 절대 금지 사항 회피 키 항목: #5(ui 직접수정), #6(process.env 직접), #7('use client'에서 @notionhq/client), #11(MVP 외 라우트), #13(max-w-* 직접), #14(클래스 템플릿 결합), #22(Post.status 영문 키). 다중 파일 동기화: Task 001 시 5개 문서(package.json/README.md/CLAUDE.md/docs/PRD.md/docs/ROADMAP.md), Task 003 시 PRD 속성 매핑 표 단일 진실 소스 일치. INFERENCE 항목(siteConfig.moodCaption 임시 카피, external 페르소나 emoji, personaCuration categories 정확성)은 코멘트로 명시 후 사용자 확정 권장. 사용자 사전 작업(Notion DB 6개 신규 속성 추가)은 Task 003 fixture 검증으로 우회 가능, Phase 2 Task 005부터 차단 의존. Pseudocode 기준 구현 가이드 제공.",
-      "summary": "Phase 1-003 완료, Phase 1 종료. (1) 4개 신규 파일: src/types/post.ts(90줄, Post/PostContent/Category/NotionBlock/PostCardProps + searchParamsSchema 한국어 검증 메시지), src/lib/notion/schemas.ts(75줄, 8개 한글 속성 Zod 매핑 + selectPropEnum/selectPropAny 헬퍼 분리), src/lib/site-config.ts(28줄, HERO Logline + moodCaption INFERENCE 코멘트 + SEO 메타 단일 소스), src/lib/notion/persona-curation.ts(90줄, 5 페르소나 + as const satisfies + assertDistinctPersonaCategorySets 회귀 헬퍼). (2) 절대 금지 #22 회피 검증: grep 결과 'Post.status' 0건, Post.publication 영문 키 강제 일관 적용. (3) PRD 단일 진실 소스 일치: HERO Logline 글자 단위 일치, 8 한글 속성 정확, 5 페르소나 ↔ 9 분류 묶음 PRD 페르소나별 진입 시나리오 표 추출. (4) 임시 검증(옵션 1, 검증 후 page.tsx 원복 git diff 0): fixture parse 성공/실패 양쪽 / distinct persona category sets OK / searchParamsSchema 한국어 메시지 ('검색어를 입력해주세요', '검색어는 200자를 넘을 수 없습니다') / logline matches PRD true. (5) npm run typecheck/check-all/build 모두 통과(Turbopack). (6) docs/tasks/003-domain-types-and-curation.md 작성, docs/ROADMAP.md Task 003 ✅ + Phase 1 헤더 ✅ 갱신. (7) INFERENCE 3건(siteConfig.hero.moodCaption 임시 카피, external 페르소나 emoji 🌟, personaCuration[].categories 정확성)은 모두 코멘트 명시 — 사용자 확정 권장. (8) Phase 1 종료 = Phase 2 Task 004(Notion 클라이언트) 시작 가능. 단 Phase 2 Task 005부터는 사용자 사전 작업(Notion DB 6개 속성 추가) 완료가 차단 의존.",
-      "completedAt": "2026-05-06T14:50:36.026Z"
+      "implementationGuide": "단계 1: shadcn collapsible 추가 (MCP 흐름 — list_items_in_registries [\"@shadcn\"] → view_items_in_registries [\"@shadcn/collapsible\"] → get_add_command_for_items [\"@shadcn/collapsible\"] → npx shadcn@latest add collapsible). 단계 2: F017 3개 컴포넌트 작성 — callout-intro.tsx(서버 컴포넌트, 파란 배경 + 💡 + not-prose), table-cell-badge.tsx(서버, shadcn Badge variant 활용 또는 cn() 직접, success/warning prop), missing-items-collapsible.tsx('use client', Collapsible defaultOpen=false, 헤더 \"🚧 기획자 작업 중\"). 단계 3: section-utils.ts 작성 — extractSectionsByHeading(blocks, predicate) + extractPlainText(richText) + getRichTextFromBlock(block) 3개 export. 단계 4: reading-time.ts 작성 — calculateReadingTime(blocks) Math.max(1, Math.round(totalLen/500)). 단계 5: tldr-extractor.ts 작성 — PLACEHOLDER_REGEX export + extractTldr(blocks, summary) 4단계 fall-through. 단계 6: related-docs-fetcher.ts 작성 — _fetchOnePageMetaImpl(pageId) try/catch + isFullPage + 웹 게시 발행됨 검증 → unstable_cache wrapper(['related-doc-meta'], revalidate:60, tags:['posts','related-docs']) → getRelatedDocs(blocks)에서 멘션 추출 + Promise.all(uniqueIds.map) + filter null. 단계 7: render-blocks.tsx 작성 — 비동기 서버 컴포넌트. renderBlock switch(12종) + 미지원 console.warn dev only + null fallback. callout 인식 block.callout.icon.type==='emoji' && emoji==='💡'. 표 셀 split(/\\[확정\\]|\\[임시\\]/g). list_item 그룹화. has_children=true 블록은 await blocks.children.list 재귀(깊이 제한 3). 미결 사항 섹션 자동 wrap. 단계 8: types/post.ts PostContent.summary: string|null 추가. 단계 9: posts.ts getPostBySlug에서 props.요약 정규화 후 PostContent.summary에 포함. 단계 10: next.config.ts images.remotePatterns에 Notion file 호스트 추가. 단계 11: src/app/posts/[slug]/page.tsx 임시 통합 — extractTldr + calculateReadingTime + getRelatedDocs + renderBlocks 호출 + Phase 4 Task 013 본격 UI 마커 유지. 단계 12: src/lib/notion/__verify/ 디렉토리 + tldr-fixtures.ts + reading-time-fixtures.ts(npx tsx 일회성 실행, 콘솔 PASS/FAIL). 단계 13: docs/PRD.md 도메인 타입 표 PostContent.summary 1줄 갱신. 단계 14: npm run check-all + npm run build. 단계 15: tsx 검증 스크립트 실행 + Playwright MCP 시나리오(⑤ 0개 영역 숨김 + ⑥ 읽기 시간 글 상세 노출). 단계 16: grep 검증(process.env.NOTION/'use client'/dataSources.query/PLACEHOLDER_REGEX). 단계 17: docs/tasks/006-block-renderer-and-pattern-transform.md 작성(수락 기준 체크박스 + 변경 사항 요약 + 테스트 체크리스트 + INFERENCE 항목 + 사용자 추가 작업 안내). 단계 18: docs/ROADMAP.md Task 006 ✅ + shrimp ID + See 참조 + Phase 2 진행률.",
+      "verificationCriteria": "npm run check-all 통과 + npm run build 통과 (Turbopack, env optional 보존). tsx 검증 스크립트(__verify/tldr-fixtures.ts + reading-time-fixtures.ts) 콘솔 PASS 출력. Playwright MCP 시나리오 통과 — ⑤ Test 페이지 연동 문서 영역 부재(0개 → 영역 자체 없음) + ⑥ 글 상세에 읽기 시간 1분 표시 + (사용자 시나리오 블록 추가 시) ② 💡 콜아웃 → 인트로 박스 / ③ [확정]/[임시] → 색상 배지 / ④ 미결 사항 토글 기본 접힘. grep 검증 — process.env.NOTION 1건만(env.ts) / 'use client' in src/lib/notion/ 0건 / 본 모듈 외 dataSources.query 0건 / PLACEHOLDER_REGEX 변형 0건. 절대 금지 #6/#7/#9/#19/#20/#21 비위반. F018 unstable_cache wrapper 적용 확인 + 동일 pageId 두 번째 호출 cache hit. F016 4단계 fall-through fixture 1건 이상 PASS. ROADMAP Task 006 ✅ + shrimp ID + See 참조. docs/tasks/006-block-renderer-and-pattern-transform.md 수락 기준/변경 사항 요약/테스트 체크리스트/INFERENCE 항목/사용자 추가 작업 안내 모두 작성 완료.",
+      "analysisResult": "Phase 2-006 핵심: Notion 블록 → React JSX 변환 + F016/F017/F018/F019 작성 패턴 자동 변환. 결정 사항: (1) F017 컴포넌트 3개는 src/components/posts/에 본 Task에서 추가(옵션 A) — Phase 3 Task 008은 카드/그리드/상태 컴포넌트만 담당. (2) F018 메모이즈는 unstable_cache 단독(cache() 미병행). (3) types/post.ts PostContent.summary 추가 + getPostBySlug 정규화 보강(글 상세 임시 통합 단순화 + 9.6 동기화 PRD 1줄). (4) NotionBlock children 미추가 — render-blocks가 비동기 서버 컴포넌트로 has_children 재귀 fetch(Task 005 보강 회피, 옵션 b). (5) 단위 검증은 tsx 일회성 스크립트(F016 4단계 fall-through, F019 읽기 시간) + Playwright MCP 실측(F018 0개 케이스, F019 글 상세 노출 + 사용자 추가 작업 시 F017 시각). (6) Collapsible은 shadcn MCP 흐름으로 추가. (7) next.config.ts remotePatterns에 Notion file 호스트 추가. (8) Vitest 미설치 / 별도 라우트 미추가 / Task 005 미수정. 검증 게이트: npm run check-all + npm run build + tsx 스크립트 PASS + Playwright 실측 + grep(process.env.NOTION/'use client'/dataSources.query/PLACEHOLDER_REGEX 변형) + ROADMAP ✅. 본 Task는 단일 큰 Task로 운영하며 Phase 2의 데이터 변환 레이어를 마무리한다(Task 007 캐시 통합 점검은 사용자 명시 지시 시 별도 plan)."
     }
   ]
 }

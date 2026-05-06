@@ -46,7 +46,7 @@ export const personaCuration = [
     emoji: '🎶',
     title: '사운드 디자이너',
     hookCopy: '핵심 감정과 사운드 방향성',
-    categories: ['🎶 사운드 기획', '🎞️ 내러티브 기획'],
+    categories: ['🎶 사운드 기획', '🎞️내러티브 기획'],
   },
   {
     slug: 'programmer',
