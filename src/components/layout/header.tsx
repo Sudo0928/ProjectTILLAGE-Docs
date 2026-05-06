@@ -11,6 +11,10 @@ import { MobileNav } from '@/components/navigation/mobile-nav'
 import { Container } from './container'
 import { ThemeToggle } from '@/components/theme-toggle'
 
+/**
+ * 글로벌 헤더 - 모든 페이지에서 공통 사용
+ * F011: 로고, 카테고리 메뉴, 검색바 제공
+ */
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const isMobile = useMediaQuery('(max-width: 768px)')
@@ -22,7 +26,7 @@ export function Header() {
           {/* Logo */}
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center space-x-2">
-              <span className="text-xl font-bold">NextJS Starter</span>
+              <span className="text-xl font-bold">ProjectTILLAGE</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -31,13 +35,6 @@ export function Header() {
 
           {/* Right Side */}
           <div className="flex items-center gap-4">
-            {!isMobile && (
-              <Link href="/login">
-                <Button variant="outline" size="sm">
-                  로그인
-                </Button>
-              </Link>
-            )}
             <ThemeToggle />
 
             {/* Mobile Menu Button */}

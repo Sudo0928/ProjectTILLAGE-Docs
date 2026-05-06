@@ -1,20 +1,53 @@
 # 🤖 Claude Code 개발 지침
 
-**claude-nextjs-starters**는 Next.js 15.5.3 + React 19 기반 모던 웹 애플리케이션 스타터 템플릿입니다.
+**ProjectTILLAGE-Docs**는 Notion에 작성한 기획서를 자동으로 웹에 게시하는 Notion 기반 문서 발행 사이트입니다.
+
+📋 상세 프로젝트 요구사항은 @/docs/PRD.md 참조
+🗺️ 개발 로드맵은 @/docs/ROADMAP.md 참조
 
 ## 🛠️ 핵심 기술 스택
 
 - **Framework**: Next.js 15.5.3 (App Router + Turbopack)
 - **Runtime**: React 19.1.0 + TypeScript 5
 - **Styling**: TailwindCSS v4 + shadcn/ui (new-york style)
-- **Forms**: React Hook Form + Zod + Server Actions
+- **Notion 연동**: @notionhq/client + 자체 블록 렌더러
+- **Forms**: React Hook Form + Zod
 - **UI Components**: Radix UI + Lucide Icons
 - **Development**: ESLint + Prettier + Husky + lint-staged
 
+## 📌 프로젝트 특성 및 주의사항
+
+### Notion 연동
+
+- 모든 콘텐츠는 Notion API를 통해 조회합니다. DB에 직접 데이터를 쓰지 않습니다.
+- `NOTION_TOKEN`, `NOTION_DATABASE_ID` 환경 변수가 없으면 Notion 관련 기능이 동작하지 않습니다.
+- 로컬 개발 시 반드시 `.env.local` 파일을 생성하세요 (`.env.local.example` 참조).
+- Status=`발행됨`인 페이지만 노출됩니다. `초안` 상태는 API 필터로 제외됩니다.
+
+### 렌더링 전략
+
+- 글 목록 및 상세 페이지: 서버 컴포넌트 + ISR (`revalidate: 60`)
+- 검색 결과 페이지: 서버 액션 또는 Route Handler로 동적 처리
+
+### MVP 범위 (현재 구현 대상)
+
+- F001: Notion 글 목록 조회 (홈/카테고리/검색)
+- F002: 글 상세 페이지 (Notion 블록 → HTML 렌더링)
+- F003: 카테고리 필터링
+- F004: 글 검색 (제목/태그 부분 일치)
+- F010-F014: 반응형/헤더/태그/에러상태/SEO
+
+### MVP 제외 기능 (구현하지 않습니다)
+
+- 인증(로그인/회원가입) — 사이트는 공개 읽기 전용
+- 댓글, 좋아요, 북마크
+- 글 작성/편집 UI (Notion에서만)
+- 다국어, RSS, 사이트맵 자동화
+
 ## 📚 개발 가이드
 
-- **🗺️ 개발 로드맵**: `@/docs/ROADMAP.md`
 - **📋 프로젝트 요구사항**: `@/docs/PRD.md`
+- **🗺️ 개발 로드맵**: `@/docs/ROADMAP.md`
 - **📁 프로젝트 구조**: `@/docs/guides/project-structure.md`
 - **🎨 스타일링 가이드**: `@/docs/guides/styling-guide.md`
 - **🧩 컴포넌트 패턴**: `@/docs/guides/component-patterns.md`

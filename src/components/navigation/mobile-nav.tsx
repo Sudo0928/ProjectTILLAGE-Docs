@@ -7,13 +7,17 @@ import { Separator } from '@/components/ui/separator'
 
 const navItems = [
   { title: '홈', href: '/' },
-  { title: '로그인', href: '/login' },
+  { title: '카테고리', href: '/categories' },
 ]
 
 interface MobileNavProps {
   onClose: () => void
 }
 
+/**
+ * 모바일용 네비게이션 (Sheet 안에서 렌더링)
+ * F011: 반응형 환경에서 카테고리 메뉴 및 검색 진입점 제공
+ */
 export function MobileNav({ onClose }: MobileNavProps) {
   const pathname = usePathname()
 
@@ -30,7 +34,9 @@ export function MobileNav({ onClose }: MobileNavProps) {
               onClick={onClose}
               className={cn(
                 'hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block rounded-md px-2 py-1.5 text-sm leading-none font-medium no-underline transition-colors outline-none select-none',
-                pathname === item.href ? 'bg-accent text-accent-foreground' : ''
+                pathname === item.href || pathname.startsWith(item.href + '/')
+                  ? 'bg-accent text-accent-foreground'
+                  : ''
               )}
             >
               {item.title}
