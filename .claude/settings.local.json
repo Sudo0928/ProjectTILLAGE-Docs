@@ -12,15 +12,18 @@
       "mcp__shadcn__search_items_in_registries",
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
-      "mcp__shrimp-task-manager__init_project_rules",
-      "mcp__shrimp-task-manager__process_thought",
-      "Skill(git:commit)"
+      "mcp__shrimp-task-manager",
+      "Skill(git:commit)",
+      "mcp__claude_ai_Notion",
+      "mcp__context7__query-docs"
     ],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["playwright"],
+  "enabledMcpjsonServers": [
+    "playwright"
+  ],
   "hooks": {
     "Notification": [
       {
