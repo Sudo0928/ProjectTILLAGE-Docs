@@ -17,6 +17,17 @@
     "shadcn": {
       "command": "npx",
       "args": ["shadcn@latest", "mcp"]
+    },
+    "shrimp-task-manager": {
+      "command": "node",
+      "args": [
+        "/Users/duarl/Documents/ClaudeCode/mcp-shrimp-task-manager/dist/index.js"
+      ],
+      "env": {
+        "DATA_DIR": "/Users/duarl/Documents/ClaudeCode/ProjectTILLAGE-Docs/shrimp_data",
+        "TEMPLATES_USE": "ko",
+        "ENABLE_GUI": "false"
+      }
     }
   }
 }
