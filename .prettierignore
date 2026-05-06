@@ -39,3 +39,9 @@ Thumbs.db
 
 # Generated files
 next-env.d.ts
+
+# Playwright MCP 자동 생성 스냅샷/스크린샷
+.playwright-mcp/
+
+# Shrimp Task Manager 데이터
+shrimp_data/

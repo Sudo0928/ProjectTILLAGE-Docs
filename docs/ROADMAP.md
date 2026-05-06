@@ -79,7 +79,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 미완료 항목으로 다음 두 개가 남아있으며 Phase 1에서 처리합니다.
 
 - ✅ `@notionhq/client`, `@tailwindcss/typography` 설치 완료 → Phase 1 Task 001 See: /docs/tasks/001-deps-and-typography.md
-- ❌ `src/app/layout.tsx`(RootLayout)에 Header/Footer 미통합 → Phase 1 Task 002
+- ✅ `src/app/layout.tsx`(RootLayout)에 Header/Footer 통합 완료 → Phase 1 Task 002 See: /docs/tasks/002-route-shell-and-layout.md
 
 ---
 
@@ -113,19 +113,20 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
   - **검증 기준**: `npm run check-all` 통과, `npm run build` 성공, `prose` 클래스가 임시 페이지에서 렌더링되는지 수동 확인
   - See: /docs/tasks/001-deps-and-typography.md
 
-- **Task 002: 라우트 구조 및 빈 페이지 셸 생성**
-  - shrimp ID: `086db9ec` (Phase 1-002 라우트 셸 및 RootLayout 헤더/푸터 통합)
+- ✅ **Task 002: 라우트 구조 및 빈 페이지 셸 생성** — 완료
+  - shrimp ID: `b3ef441d` (Phase 1-002 라우트 셸 및 RootLayout 헤더/푸터 통합)
   - `/` 홈 페이지(이미 존재) 골격 정리 (HERO/추천/페르소나/최근 글 4개 섹션 placeholder)
   - `/categories` 카테고리 인덱스 페이지 셸 추가
   - `/categories/[slug]` 카테고리 상세 페이지 셸 추가
   - `/search` 검색 결과 페이지 셸 추가 (`?q=` 쿼리 수신, `dynamic = 'force-dynamic'` 선언)
   - `/posts/[slug]` 글 상세 페이지 셸 추가 (`generateMetadata` 자리만 정의)
-  - **RootLayout 헤더/푸터 통합 (Phase 0 미완료 항목 해결)**: `src/app/layout.tsx`에서 `<Header />`/`<Footer />`/`<Container>` 래핑이 모든 라우트에 적용되는지 검증
+  - **RootLayout 헤더/푸터 통합 (Phase 0 미완료 항목 해결)**: `src/app/layout.tsx`에서 `<Header />`/`<Footer />`/`<main>` 래핑이 모든 라우트에 적용
   - 모든 페이지에 `export const revalidate = 60` 또는 `dynamic = 'force-dynamic'` 명시 (shrimp-rules.md 5.3)
   - 각 페이지 본문은 `<Container>` 사용 (shrimp-rules.md 6.2 — `max-w-*` 직접 사용 금지)
-  - **산출물**: 5개 라우트 모두 404 없이 빈 화면이라도 라우팅되며 헤더/푸터가 일관되게 표시되는 상태
+  - **산출물**: 5개 라우트 모두 404 없이 라우팅되며 헤더/푸터가 일관되게 표시되는 상태 (M1 마일스톤 달성)
   - **의존성**: Task 001 완료
-  - **검증 기준**: Playwright MCP로 5개 URL 직접 진입 → 200 응답 + 헤더/푸터 노출 확인
+  - **검증 기준**: Playwright MCP로 5개 URL 직접 진입 → 200 응답 + 헤더/푸터 노출 확인 ✅
+  - See: /docs/tasks/002-route-shell-and-layout.md
 
 - **Task 003: 도메인 타입, Zod 스키마, 큐레이션 모듈 정의 (v2 확장)**
   - shrimp ID: `34264159` (Phase 1-003 도메인 타입 및 Zod 스키마 정의 — 신규 6개 속성 + persona-curation + site-config 포함)
