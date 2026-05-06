@@ -26,7 +26,7 @@
       "env": {
         "DATA_DIR": "/Users/duarl/Documents/ClaudeCode/ProjectTILLAGE-Docs/shrimp_data",
         "TEMPLATES_USE": "ko",
-        "ENABLE_GUI": "false"
+        "ENABLE_GUI": "true"
       }
     }
   }
