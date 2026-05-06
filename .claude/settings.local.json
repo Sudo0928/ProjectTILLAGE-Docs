@@ -13,7 +13,8 @@
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
       "mcp__shrimp-task-manager__init_project_rules",
-      "mcp__shrimp-task-manager__process_thought"
+      "mcp__shrimp-task-manager__process_thought",
+      "Skill(git:commit)"
     ],
     "deny": [],
     "ask": []
