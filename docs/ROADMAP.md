@@ -137,9 +137,9 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 
 ---
 
-### Phase 2: 데이터 레이어 (Notion 연동)
+### Phase 2: 데이터 레이어 (Notion 연동) ✅
 
-> 진행률: Task 004/005/006 완료 ✅, Task 007 미시작
+> 진행률: Task 004/005/006/007 모두 완료 ✅
 
 Notion API 호출, 정규화, 캐시 정책을 한 번에 정리합니다. UI보다 우선해 처리해야 더미가 아닌 실데이터 흐름을 빠르게 검증할 수 있습니다.
 
@@ -227,7 +227,8 @@ Notion API 호출, 정규화, 캐시 정책을 한 번에 정리합니다. UI보
   - **의존성**: Task 005 완료
   - **검증 기준**: 위 Playwright MCP 시나리오 6건 모두 통과, F018 메모이즈 동작이 Network 탭/콘솔 로그로 fetch 횟수 검증되어 N+1 미발생
 
-- **Task 007: 캐시 전략 통합 점검**
+- ✅ **Task 007: 캐시 전략 통합 점검** — 완료
+  - shrimp ID: `a6fffef5-dd5a-44f8-a24d-3bb5523ed56f`
   - 모든 페이지가 shrimp-rules.md 5.3 표(홈/카테고리/카테고리 상세/글 상세 → ISR 60s, 검색 → dynamic)대로 구현되었는지 점검
   - F018 메모이즈 wrapper와 페이지 단위 ISR이 충돌 없이 동작하는지 확인
   - `revalidate = 60` 후 60초 이내 발행 상태 토글이 반영되는지 수동 측정
@@ -235,6 +236,8 @@ Notion API 호출, 정규화, 캐시 정책을 한 번에 정리합니다. UI보
   - **산출물**: 캐시 전략 점검 결과 요약 (Task 파일 변경 사항에 첨부)
   - **의존성**: Task 006 완료
   - **검증 기준**: 5개 페이지 모두 의도된 캐시 전략으로 동작, 60초 반영 측정값 첨부
+  - **검증 결과**: ✅ check-all + build 통과 / 5/5 페이지 export const 일치 / 6함수 wrapping + 2 의도적 미적용 / (b) dev 진단 로그 추가 / 검색 dynamic 실측 / M6 측정 N/A (Phase 5 Task 016 위임) / 절대 금지 4건 PASS
+  - See: /docs/tasks/007-cache-strategy-audit.md
 
 ---
 

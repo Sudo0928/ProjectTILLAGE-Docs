@@ -39,6 +39,7 @@ const RELATED_DOCS_REGEX = /^\s*\d+\.\s*연동\s*문서\s*$/
  *
  * 발행 상태(웹 게시 === '발행됨') 검증 포함 (절대 금지 #9).
  * 권한 부족 / 404 / 초안 페이지는 null 반환 (graceful 처리).
+ * 동일 pageId 반복 호출 시 캐시 hit으로 fetch 호출 0회 — dev 로그로 검증 가능.
  *
  * @param pageId - 조회할 Notion 페이지 ID
  * @returns 발행된 페이지 메타 또는 null
@@ -46,6 +47,9 @@ const RELATED_DOCS_REGEX = /^\s*\d+\.\s*연동\s*문서\s*$/
 async function _fetchOnePageMetaImpl(
   pageId: string
 ): Promise<RelatedDocMeta | null> {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[related-docs] fetch start', pageId)
+  }
   try {
     const notion = getNotionClient()
     const page = await notion.pages.retrieve({ page_id: pageId })

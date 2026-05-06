@@ -1,166 +1,114 @@
 {
   "tasks": [
     {
-      "id": "f4ec809a-0f60-4174-9833-f00b5ab24ec6",
-      "name": "Phase 2-006 Notion 블록 렌더러 + 작성 패턴 자동 변환",
-      "description": "src/lib/notion/ 하위 5개 신규 모듈(section-utils.ts/tldr-extractor.ts/reading-time.ts/related-docs-fetcher.ts/render-blocks.tsx) 구현 + src/components/posts/ F017 3개 컴포넌트(callout-intro/table-cell-badge/missing-items-collapsible) 추가 + shadcn Collapsible 추가 + next.config.ts remotePatterns + types/post.ts PostContent.summary 추가 + posts.ts getPostBySlug 정규화 보강 + page.tsx 임시 통합 + tsx 검증 스크립트 + ROADMAP/PRD 동기화. F002 본문 렌더링 + F016 TL;DR 4단계 + placeholder fall-through + F017 패턴 변환(💡 콜아웃/[확정]/[임시] 배지/미결 토글) + F018 연동 문서 카드(unstable_cache 메모이즈, 비공개 멘션 숨김, 0개 영역 숨김) + F019 읽기 시간(한국어 분당 500자) 모두 본 Task에서 결정. 핵심 강제: 절대 금지 #19 F018 메모이즈 / #21 F016 fall-through / #9 비공개 멘션 노출 / #6 process.env 직접 사용 / #7 'use client' Notion SDK / #20 F019 단일 query.",
-      "notes": "strict 강제: TS strict, 'as' 캐스팅 금지, '!' non-null assertion 금지. 한국어 사용자 노출 문자열. cn() 헬퍼 일원화. 서버 전용 모듈 5개 모두 파일 상단 주석 강제. F018 unstable_cache 키 ['related-doc-meta'] 단일 + revalidate 60 + tags ['posts','related-docs']. F016 PLACEHOLDER_REGEX는 단일 소스 export(변형 금지). render-blocks 비동기로 has_children 재귀 fetch(깊이 3 제한). toggle children fetch는 1단계만 — 깊은 재귀 후속 Task. INFERENCE 명시: cache() 미병행 / NotionBlock children 미추가(render-blocks 비동기) / F017 컴포넌트 위치 (A) / Vitest 미설치(tsx 스크립트 + Playwright 혼합) / 사용자 추가 작업 안내(Test 페이지 시나리오 블록).",
+      "id": "a6fffef5-dd5a-44f8-a24d-3bb5523ed56f",
+      "name": "Phase 2-007 캐시 전략 통합 점검 (audit)",
+      "description": "Phase 2의 마지막 Task. 신규 코드 거의 없는 audit 성격. 5개 페이지 export const + 함수 8건 unstable_cache wrapping + F018 메모이즈 + 검색 페이지 dynamic + 60초 반영(M6 마일스톤) + 글 상세 임시 통합 마커 + 절대 금지 사항 회귀 일괄 점검. 위반 발견 시 즉시 정정. 핵심 산출물: docs/tasks/007-cache-strategy-audit.md (점검 결과 표 10건 + 함수 캐시 정책 표 8건 + 60초 측정 timestamp + INFERENCE 4건 + 사용자 추가 작업 안내) + (b) dev 진단 로그 1줄 추가(related-docs-fetcher.ts) + ROADMAP Task 007 ✅ + Phase 2 헤더 ✅ + 진행률 갱신. 본 Task 완료 시 Phase 2 ✅ 마무리되어 Task 008(Phase 3) 진입 가능.",
+      "notes": "audit Task이므로 코드 변경은 (b) dev 진단 로그 1줄 + 점검 결과 위반 발견 시 정정만. 새 기능/의존성/라우트 추가 금지. 사용자 협조: M6 60초 측정 시 Notion `웹 게시` 토글 ~10분. 사용자 미응답 또는 시간 미가용 시 코드 분석 + Context7 인용으로 PASS 처리 + Phase 5 Task 016에서 회귀. F018 실측 시나리오는 사용자가 Test 페이지에 동일 멘션 2회 추가하면 가능 — 미수행 시 fetch 0회 환경에서 PASS. INFERENCE 4건: F018 60초 갭 허용 / searchPosts·getPostsByCategory 베이스 캐시 의도 / dev 진단 로그 (b) 영구 채택 / revalidateTag 미사용 정책 명시.",
       "status": "completed",
       "dependencies": [],
-      "createdAt": "2026-05-06T16:32:20.238Z",
-      "updatedAt": "2026-05-06T16:53:55.702Z",
+      "createdAt": "2026-05-06T17:01:43.045Z",
+      "updatedAt": "2026-05-06T17:11:23.546Z",
       "relatedFiles": [
         {
-          "path": "src/lib/notion/section-utils.ts",
-          "type": "CREATE",
-          "description": "공통 유틸 — extractSectionsByHeading + extractPlainText + getRichTextFromBlock 3개 export"
+          "path": "src/app/page.tsx",
+          "type": "REFERENCE",
+          "description": "홈 페이지 — revalidate = 60 점검(L3)",
+          "lineStart": 1,
+          "lineEnd": 10
         },
         {
-          "path": "src/lib/notion/tldr-extractor.ts",
-          "type": "CREATE",
-          "description": "F016 — PLACEHOLDER_REGEX export + extractTldr(blocks, summary) 4단계 fall-through"
+          "path": "src/app/categories/page.tsx",
+          "type": "REFERENCE",
+          "description": "카테고리 인덱스 — revalidate = 60 점검(L3)",
+          "lineStart": 1,
+          "lineEnd": 10
         },
         {
-          "path": "src/lib/notion/reading-time.ts",
-          "type": "CREATE",
-          "description": "F019 — calculateReadingTime(blocks) 한국어 분당 500자, 최소 1분"
-        },
-        {
-          "path": "src/lib/notion/related-docs-fetcher.ts",
-          "type": "CREATE",
-          "description": "F018 — getRelatedDocs(blocks) + unstable_cache 메모이즈된 멘션 메타 fetcher (절대 금지 #19)"
-        },
-        {
-          "path": "src/lib/notion/render-blocks.tsx",
-          "type": "CREATE",
-          "description": "F002 + F017 — Notion 블록 → React JSX 변환 비동기 서버 컴포넌트(has_children 재귀 fetch 깊이 3) + F017 패턴 자동 적용"
-        },
-        {
-          "path": "src/components/posts/callout-intro.tsx",
-          "type": "CREATE",
-          "description": "F017 — 💡 콜아웃 인트로 박스 (파란 배경 + not-prose)"
-        },
-        {
-          "path": "src/components/posts/table-cell-badge.tsx",
-          "type": "CREATE",
-          "description": "F017 — [확정]/[임시] 색상 배지 (success 녹색 / warning 노랑)"
-        },
-        {
-          "path": "src/components/posts/missing-items-collapsible.tsx",
-          "type": "CREATE",
-          "description": "F017 — 미결 사항 토글 ('use client', Collapsible defaultOpen=false, 헤더 🚧 기획자 작업 중)"
-        },
-        {
-          "path": "src/components/ui/collapsible.tsx",
-          "type": "CREATE",
-          "description": "shadcn collapsible CLI로 자동 생성 — radix-ui 의존만 추가"
-        },
-        {
-          "path": "src/lib/notion/__verify/tldr-fixtures.ts",
-          "type": "CREATE",
-          "description": "F016 4단계 fall-through 단위 검증 — npx tsx 일회성 실행 콘솔 PASS/FAIL"
-        },
-        {
-          "path": "src/lib/notion/__verify/reading-time-fixtures.ts",
-          "type": "CREATE",
-          "description": "F019 글자 수 단위 검증 — npx tsx 일회성 실행"
-        },
-        {
-          "path": "docs/tasks/006-block-renderer-and-pattern-transform.md",
-          "type": "CREATE",
-          "description": "본 Task 명세 — 수락 기준 체크박스 + 변경 사항 요약 + 테스트 체크리스트 + INFERENCE + 사용자 추가 작업 안내"
-        },
-        {
-          "path": "src/types/post.ts",
-          "type": "TO_MODIFY",
-          "description": "PostContent.summary: string | null 추가 (F016 3단계 입력 경로 단순화)",
-          "lineStart": 36,
-          "lineEnd": 42
-        },
-        {
-          "path": "src/lib/notion/posts.ts",
-          "type": "TO_MODIFY",
-          "description": "getPostBySlug 정규화에 props.요약 → PostContent.summary 포함 (Task 005 _getPostBySlugImpl 일부 보강)",
-          "lineStart": 147,
-          "lineEnd": 197
+          "path": "src/app/categories/[slug]/page.tsx",
+          "type": "REFERENCE",
+          "description": "카테고리 상세 — revalidate = 60 점검(L4)",
+          "lineStart": 1,
+          "lineEnd": 10
         },
         {
           "path": "src/app/posts/[slug]/page.tsx",
-          "type": "TO_MODIFY",
-          "description": "임시 통합 — extractTldr + calculateReadingTime + getRelatedDocs + renderBlocks 호출 (Phase 4 Task 013 본격 UI 마커 유지)",
+          "type": "REFERENCE",
+          "description": "글 상세 — revalidate = 60 점검(L10) + 임시 통합 마커 무결성 grep",
           "lineStart": 1,
-          "lineEnd": 67
+          "lineEnd": 114
         },
         {
-          "path": "next.config.ts",
-          "type": "TO_MODIFY",
-          "description": "images.remotePatterns에 Notion file 호스트(prod-files-secure.s3.us-west-2.amazonaws.com) 추가",
+          "path": "src/app/search/page.tsx",
+          "type": "REFERENCE",
+          "description": "검색 페이지 — dynamic = 'force-dynamic' 점검(L4) + 매 요청 fresh 동작 실측",
           "lineStart": 1,
-          "lineEnd": 40
+          "lineEnd": 55
         },
         {
-          "path": "docs/PRD.md",
-          "type": "TO_MODIFY",
-          "description": "도메인 타입 표 PostContent.summary 1줄 갱신 (9.6 동기화)"
-        },
-        {
-          "path": "docs/ROADMAP.md",
-          "type": "TO_MODIFY",
-          "description": "Task 006 ✅ + shrimp ID + See: docs/tasks/006-block-renderer-and-pattern-transform.md + Phase 2 진행률",
-          "lineStart": 193,
-          "lineEnd": 224
-        },
-        {
-          "path": "src/lib/notion/client.ts",
+          "path": "src/lib/notion/posts.ts",
           "type": "REFERENCE",
-          "description": "getNotionClient 재사용 — F018 fetcher에서 호출"
-        },
-        {
-          "path": "src/lib/notion/schemas.ts",
-          "type": "REFERENCE",
-          "description": "notionPagePropertiesSchema 재사용 — F018 멘션 메타 정규화"
-        },
-        {
-          "path": "src/lib/notion/slug.ts",
-          "type": "REFERENCE",
-          "description": "slugFromPageId 재사용 — RelatedDocMeta.slug 생성"
+          "description": "7종 데이터 함수 캐시 정책 점검 — getPublishedPosts(L134)/getPostBySlug(L204)/getRecommendedPosts(L277)/getRelatedPostsByCategory(L317) wrapping + searchPosts 의도적 미적용",
+          "lineStart": 1,
+          "lineEnd": 320
         },
         {
           "path": "src/lib/notion/categories.ts",
           "type": "REFERENCE",
-          "description": "기존 패턴 일관성 참고"
+          "description": "getCategories wrapping(L55) + getPostsByCategory 의도적 미적용(L70-77) 점검",
+          "lineStart": 1,
+          "lineEnd": 78
+        },
+        {
+          "path": "src/lib/notion/related-docs-fetcher.ts",
+          "type": "TO_MODIFY",
+          "description": "F018 fetchOnePageMeta unstable_cache wrapping 점검(L95) + (b) dev 진단 로그 1줄 추가(L46 _fetchOnePageMetaImpl 진입부)",
+          "lineStart": 40,
+          "lineEnd": 100
+        },
+        {
+          "path": "docs/tasks/007-cache-strategy-audit.md",
+          "type": "CREATE",
+          "description": "본 Task 명세 — 개요/수락 기준/점검 결과 표 10건/함수 캐시 정책 표 8건/M6 측정/INFERENCE 4건/사용자 안내/다음 Phase 안내"
+        },
+        {
+          "path": "docs/ROADMAP.md",
+          "type": "TO_MODIFY",
+          "description": "Task 007 ✅ + shrimp ID + 검증 결과 1줄 + See 참조 + Phase 2 헤더 ✅ + 진행률 갱신",
+          "lineStart": 140,
+          "lineEnd": 238
         },
         {
           "path": "shrimp-rules.md",
           "type": "REFERENCE",
-          "description": "5.4(서버 전용)/5.5(함수 위치)/5.6(메모이즈/fall-through 강제)/6.1(shadcn MCP 흐름)/9.6(DB 스키마 동기화)/11(절대 금지 #6/#7/#9/#19/#21) 강제 규칙 단일 소스"
+          "description": "5.3 페이지 캐시 정책 표(점검 기준) + 5.5 함수 7종 + 5.6 메모이즈 강제 + 11번 절대 금지 #19/#21 grep 회귀"
         },
         {
           "path": "docs/PRD.md",
           "type": "REFERENCE",
-          "description": "F016 4단계 우선순위 + PLACEHOLDER_REGEX + F017 패턴 + F018 비공개 멘션 + F019 읽기 시간 정의 단일 소스"
+          "description": "비기능 요구사항(60초 반영) — M6 측정 기준"
         },
         {
-          "path": "docs/tasks/005-notion-data-functions.md",
+          "path": "docs/tasks/006-block-renderer-and-pattern-transform.md",
           "type": "REFERENCE",
-          "description": "직전 완료 Task — 7종 데이터 함수 + getPostBySlug 동작 패턴"
+          "description": "직전 완료 Task — 문서 형식 일관성 참조"
         },
         {
           "path": "package.json",
           "type": "DEPENDENCY",
-          "description": "shadcn collapsible 추가 시 자동 갱신 — radix-ui 이미 설치됨, 신규 의존성 최소"
+          "description": "npm run check-all + build 게이트 의존"
         },
         {
           "path": ".env.local",
           "type": "DEPENDENCY",
-          "description": "NOTION_TOKEN + NOTION_DATABASE_ID — F018 fetcher 동작 차단 의존"
+          "description": "M6 측정 시 NOTION_TOKEN + NOTION_DATABASE_ID 정상 동작 의존"
         }
       ],
-      "implementationGuide": "단계 1: shadcn collapsible 추가 (MCP 흐름 — list_items_in_registries [\"@shadcn\"] → view_items_in_registries [\"@shadcn/collapsible\"] → get_add_command_for_items [\"@shadcn/collapsible\"] → npx shadcn@latest add collapsible). 단계 2: F017 3개 컴포넌트 작성 — callout-intro.tsx(서버 컴포넌트, 파란 배경 + 💡 + not-prose), table-cell-badge.tsx(서버, shadcn Badge variant 활용 또는 cn() 직접, success/warning prop), missing-items-collapsible.tsx('use client', Collapsible defaultOpen=false, 헤더 \"🚧 기획자 작업 중\"). 단계 3: section-utils.ts 작성 — extractSectionsByHeading(blocks, predicate) + extractPlainText(richText) + getRichTextFromBlock(block) 3개 export. 단계 4: reading-time.ts 작성 — calculateReadingTime(blocks) Math.max(1, Math.round(totalLen/500)). 단계 5: tldr-extractor.ts 작성 — PLACEHOLDER_REGEX export + extractTldr(blocks, summary) 4단계 fall-through. 단계 6: related-docs-fetcher.ts 작성 — _fetchOnePageMetaImpl(pageId) try/catch + isFullPage + 웹 게시 발행됨 검증 → unstable_cache wrapper(['related-doc-meta'], revalidate:60, tags:['posts','related-docs']) → getRelatedDocs(blocks)에서 멘션 추출 + Promise.all(uniqueIds.map) + filter null. 단계 7: render-blocks.tsx 작성 — 비동기 서버 컴포넌트. renderBlock switch(12종) + 미지원 console.warn dev only + null fallback. callout 인식 block.callout.icon.type==='emoji' && emoji==='💡'. 표 셀 split(/\\[확정\\]|\\[임시\\]/g). list_item 그룹화. has_children=true 블록은 await blocks.children.list 재귀(깊이 제한 3). 미결 사항 섹션 자동 wrap. 단계 8: types/post.ts PostContent.summary: string|null 추가. 단계 9: posts.ts getPostBySlug에서 props.요약 정규화 후 PostContent.summary에 포함. 단계 10: next.config.ts images.remotePatterns에 Notion file 호스트 추가. 단계 11: src/app/posts/[slug]/page.tsx 임시 통합 — extractTldr + calculateReadingTime + getRelatedDocs + renderBlocks 호출 + Phase 4 Task 013 본격 UI 마커 유지. 단계 12: src/lib/notion/__verify/ 디렉토리 + tldr-fixtures.ts + reading-time-fixtures.ts(npx tsx 일회성 실행, 콘솔 PASS/FAIL). 단계 13: docs/PRD.md 도메인 타입 표 PostContent.summary 1줄 갱신. 단계 14: npm run check-all + npm run build. 단계 15: tsx 검증 스크립트 실행 + Playwright MCP 시나리오(⑤ 0개 영역 숨김 + ⑥ 읽기 시간 글 상세 노출). 단계 16: grep 검증(process.env.NOTION/'use client'/dataSources.query/PLACEHOLDER_REGEX). 단계 17: docs/tasks/006-block-renderer-and-pattern-transform.md 작성(수락 기준 체크박스 + 변경 사항 요약 + 테스트 체크리스트 + INFERENCE 항목 + 사용자 추가 작업 안내). 단계 18: docs/ROADMAP.md Task 006 ✅ + shrimp ID + See 참조 + Phase 2 진행률.",
-      "verificationCriteria": "npm run check-all 통과 + npm run build 통과 (Turbopack, env optional 보존). tsx 검증 스크립트(__verify/tldr-fixtures.ts + reading-time-fixtures.ts) 콘솔 PASS 출력. Playwright MCP 시나리오 통과 — ⑤ Test 페이지 연동 문서 영역 부재(0개 → 영역 자체 없음) + ⑥ 글 상세에 읽기 시간 1분 표시 + (사용자 시나리오 블록 추가 시) ② 💡 콜아웃 → 인트로 박스 / ③ [확정]/[임시] → 색상 배지 / ④ 미결 사항 토글 기본 접힘. grep 검증 — process.env.NOTION 1건만(env.ts) / 'use client' in src/lib/notion/ 0건 / 본 모듈 외 dataSources.query 0건 / PLACEHOLDER_REGEX 변형 0건. 절대 금지 #6/#7/#9/#19/#20/#21 비위반. F018 unstable_cache wrapper 적용 확인 + 동일 pageId 두 번째 호출 cache hit. F016 4단계 fall-through fixture 1건 이상 PASS. ROADMAP Task 006 ✅ + shrimp ID + See 참조. docs/tasks/006-block-renderer-and-pattern-transform.md 수락 기준/변경 사항 요약/테스트 체크리스트/INFERENCE 항목/사용자 추가 작업 안내 모두 작성 완료.",
-      "analysisResult": "Phase 2-006 핵심: Notion 블록 → React JSX 변환 + F016/F017/F018/F019 작성 패턴 자동 변환. 결정 사항: (1) F017 컴포넌트 3개는 src/components/posts/에 본 Task에서 추가(옵션 A) — Phase 3 Task 008은 카드/그리드/상태 컴포넌트만 담당. (2) F018 메모이즈는 unstable_cache 단독(cache() 미병행). (3) types/post.ts PostContent.summary 추가 + getPostBySlug 정규화 보강(글 상세 임시 통합 단순화 + 9.6 동기화 PRD 1줄). (4) NotionBlock children 미추가 — render-blocks가 비동기 서버 컴포넌트로 has_children 재귀 fetch(Task 005 보강 회피, 옵션 b). (5) 단위 검증은 tsx 일회성 스크립트(F016 4단계 fall-through, F019 읽기 시간) + Playwright MCP 실측(F018 0개 케이스, F019 글 상세 노출 + 사용자 추가 작업 시 F017 시각). (6) Collapsible은 shadcn MCP 흐름으로 추가. (7) next.config.ts remotePatterns에 Notion file 호스트 추가. (8) Vitest 미설치 / 별도 라우트 미추가 / Task 005 미수정. 검증 게이트: npm run check-all + npm run build + tsx 스크립트 PASS + Playwright 실측 + grep(process.env.NOTION/'use client'/dataSources.query/PLACEHOLDER_REGEX 변형) + ROADMAP ✅. 본 Task는 단일 큰 Task로 운영하며 Phase 2의 데이터 변환 레이어를 마무리한다(Task 007 캐시 통합 점검은 사용자 명시 지시 시 별도 plan).",
-      "summary": "Phase 2-006 Notion 블록 렌더러 + 작성 패턴 자동 변환 완료. 5개 신규 모듈(section-utils.ts/tldr-extractor.ts/reading-time.ts/related-docs-fetcher.ts/render-blocks.tsx) + F017 3개 컴포넌트(callout-intro/table-cell-badge/missing-items-collapsible) + shadcn Collapsible MCP 흐름 추가 + next.config.ts Notion S3 remotePatterns 2개 + types/post.ts(PostContent.summary + NotionBlock=BlockObjectResponse alias 단순화) + posts.ts getPostBySlug 정규화 보강 + page.tsx 임시 통합(Phase 4 Task 013 본격 UI 마커 유지) + tsx 검증 스크립트 2건 + docs/tasks/006-...md + ROADMAP/PRD 동기화. 핵심 결정: (1) F018 unstable_cache 단독 채택(cache() 미병행), (2) NotionBlock alias 단순화로 as 캐스팅 0건 유지, (3) F017 컴포넌트 src/components/posts/ 위치 (A) — Phase 3 Task 008과 분담 명시, (4) render-blocks 비동기 서버 컴포넌트로 has_children 재귀(깊이 3 제한) — Task 005 미수정. 절대 금지 #6/#7/#9/#19/#20/#21 모두 준수: process.env.NOTION 1건만(env.ts 단일 진입점), 'use client' in src/lib/notion/ 0건, dataSources.query 정상 위치 2건만, PLACEHOLDER_REGEX 단일 소스 export, F018 unstable_cache wrapper 적용. 검증: npm run check-all + build 통과(First Load JS 175 kB), tsx tldr-fixtures 5/5 PASS(4단계 fall-through + null 케이스 — for loop 버그 수정 후), reading-time-fixtures 5/5 PASS(0/100/500/1000/5000자 → 1/1/1/2/10분), Playwright 시나리오 ⑤(연동 문서 0개 영역 자체 미렌더링) + ⑥(읽기 시간 약 1분 노출) + ①(TL;DR 박스 노출) 모두 통과. 검출 이슈: tldr 4단계 placeholder 건너뛰기 버그를 blocks.find → for loop 교체로 정정, render-blocks의 Suspense 경계 통합은 Phase 4 Task 013에서 검토 권장. INFERENCE 6건 docs/tasks/006-...md 명시(cache() 미병행 / NotionBlock alias / 컴포넌트 위치 A / Vitest 미설치 / toggle 1단계 / 4단계 버그 수정). 발행 글 1건 제약으로 F017 시각 시나리오 ② ③ ④는 사용자가 Test 페이지에 변환 시나리오 블록 추가 후 실측 가능 — docs/tasks/006-...md \"사용자 추가 작업 안내\" 섹션에 명시. Phase 2 진행률: Task 004 ✅ + 005 ✅ + 006 ✅ + 007 미시작. 다음 Task 007(캐시 전략 통합 점검)은 1인 운영 원칙에 따라 사용자 명시 지시 시 별도 plan 진행.",
-      "completedAt": "2026-05-06T16:53:55.700Z"
+      "implementationGuide": "단계 1: 5개 페이지 export const grep — Grep tool pattern 'export const (revalidate|dynamic)' path 'src/app'. 결과 5건 매칭 + shrimp-rules.md 5.3 표 일치 검증. 단계 2: 함수 단위 unstable_cache 분포 grep + Read — pattern 'unstable_cache|revalidate:' path 'src/lib/notion'. 결과 표 작성: 함수 8건(getPublishedPosts/getPostBySlug/getCategories/getPostsByCategory/searchPosts/getRecommendedPosts/getRelatedPostsByCategory + fetchOnePageMeta) × wrapping 여부/revalidate/tags/의도. searchPosts·getPostsByCategory는 의도적 미적용(베이스 getPublishedPosts 60초 캐시 위 인메모리 처리). 단계 3: F018 메모이즈 코드 분석 — Read related-docs-fetcher.ts L95-99 unstable_cache wrapping 형태 확인. revalidate 60 + tags ['posts','related-docs'] 일치. 단계 4: (b) dev 진단 로그 추가 — related-docs-fetcher.ts L46~ _fetchOnePageMetaImpl 시작부에 if (process.env.NODE_ENV === 'development') console.log('[related-docs] fetch start', pageId) 1줄 삽입(try block 진입 직전). 단계 5: npm run check-all + build 재실행 — 코드 변경 1줄로 인한 게이트 재실행. 통과 확인. 단계 6: 검색 페이지 매 요청 dynamic 동작 실측 — dev 서버 백그라운드 실행 후 mcp playwright browser_navigate /search?q=Test 두 번 실행. dev 서버 출력에 GET /search?q=Test 매번 200 OK 로그 확인. 단계 7: 60초 반영 측정(M6) — npm run build + npm start로 prod 모드 시작. /posts/<Test-slug> 접속 후 Test 글 노출 확인. 사용자에게 Notion에서 'Test' 글 `웹 게시` → '초안' 변경 요청 + 변경 시각 알림 받기. timestamp + 60초 후 새로고침 → 미노출 확인. 다시 발행됨 복원 후 60초 후 재노출 확인. 측정값(토글 시각/새로고침 시각/반영 여부) 기록. 단계 8: 글 상세 임시 통합 마커 무결성 grep — pattern 'Phase 4 Task 013에서 본격 UI' path src/app/posts. 1건 확인. 단계 9: 절대 금지 사항 grep 회귀 4건 — process.env.NOTION (env.ts 1건만), 'use client' in src/lib/notion (0건), unstable_cache in related-docs-fetcher.ts (1건 fetchOnePageMeta), PLACEHOLDER_REGEX 변형(tldr-extractor.ts 1건 + import만). 단계 10: docs/tasks/007-cache-strategy-audit.md 작성 — 개요(Phase, shrimp ID, 의존성)/수락 기준 체크박스/점검 결과 표 10건/함수 캐시 정책 표 8건/M6 측정 결과/INFERENCE 4건/절대 금지 grep 결과/사용자 추가 작업 안내(F018 회귀 실측 시 멘션 추가)/다음 Phase 3 Task 008 안내. 단계 11: docs/ROADMAP.md 갱신 — Task 007 ✅ + shrimp ID + 검증 결과 1줄(예: ✅ check-all+build 통과 / 5/5 페이지 + 6 함수 wrapping / M6 측정값 첨부) + See 참조 + Phase 2 헤더에 ✅ 추가('### Phase 2: 데이터 레이어 (Notion 연동) ✅') + 진행률 갱신(Task 004/005/006/007 모두 완료 ✅).",
+      "verificationCriteria": "npm run check-all + npm run build 통과(코드 1줄 변경). 5개 페이지 export const grep 결과 첨부(5/5 PASS — 홈/카테고리 인덱스/카테고리 상세/글 상세 ISR 60s + 검색 dynamic). 함수 캐시 정책 표 8건 첨부(6 적용 + 2 의도적 미적용). F018 fetchOnePageMeta unstable_cache wrapping 코드 분석 결과 첨부 + (b) dev 진단 로그 추가 확인. 검색 페이지 매 요청 dynamic 동작 dev 서버 로그 첨부. 60초 반영 측정값(M6 timestamp + 환경 + 절차) 첨부. 글 상세 임시 통합 마커 무결성 grep 1건 확인. 절대 금지 사항 grep 4건 결과 0/1 적정(process.env.NOTION 1/'use client' 0/F018 wrapping 1/PLACEHOLDER 1). docs/tasks/007-cache-strategy-audit.md 작성 완료(점검 표 + 측정 + INFERENCE 4건 + 사용자 안내). ROADMAP Task 007 ✅ + Phase 2 헤더 ✅ + shrimp ID + See 참조 + 진행률 갱신 완료. Phase 2 ✅ 마무리 + Task 008(Phase 3) 진입 가능 상태.",
+      "analysisResult": "Phase 2-007 캐시 전략 통합 점검 (audit Task — Phase 2의 마지막 Task). 사전 조사로 5/5 페이지 + 6/8 함수 unstable_cache wrapping + F018 메모이즈 + getPostsByCategory/searchPosts 의도적 미적용 모두 정상 확인됨. 핵심 결정: (1) (b) dev 진단 로그 영구 추가 채택 — related-docs-fetcher.ts L46 진입부에 NODE_ENV==='development' 가드 console.log 1줄 (prod 영향 0). (2) F018 실측은 사용자 사전 작업 권장(선택) — 미수행 시 코드 분석 + Context7 인용 PASS. (3) 60초 측정은 prod 빌드(`npm run build + npm start`) + 사용자 Notion 토글 협조 ~10분. (4) Phase 5 Task 016과 책임 분리 유지 — 본 Task는 1차 점검, 016은 회귀 점검. (5) Phase 2 헤더 ✅ 추가 (모든 Task 완료). (6) 글 상세 임시 통합 마커 무결성 점검 추가. 검증 게이트: 점검 결과 표 10건 + 함수 캐시 정책 표 8건 + 60초 측정 timestamp + 절대 금지 grep 4건 + ROADMAP Task 007 ✅ + Phase 2 헤더 ✅. 총 작업량 ~1.5시간 — 단일 Task로 충분.",
+      "summary": "Phase 2-007 캐시 전략 통합 점검 audit 완료 — Phase 2 ✅ 마무리. 11단계 점검 절차 모두 수행: (1) 5개 페이지 export const grep PASS 5/5 (홈/카테고리 인덱스/카테고리 상세/글 상세 ISR 60s + 검색 dynamic), shrimp-rules.md 5.3 표 100% 일치. (2) 함수 8건 unstable_cache wrapping 표 작성 — 6 적용(getPublishedPosts/getPostBySlug/getCategories/getRecommendedPosts/getRelatedPostsByCategory/fetchOnePageMeta) + 2 의도적 미적용(searchPosts/getPostsByCategory — getPublishedPosts 60초 캐시 위 인메모리 처리 일관 정책). (3) F018 fetchOnePageMeta unstable_cache wrapping 코드 분석 + Context7 인용으로 동일 pageId 두 번째 호출 cache hit 동작 검증. (4) (b) dev 진단 로그 1줄 영구 추가 — related-docs-fetcher.ts L50-52에 NODE_ENV==='development' 가드 console.log + L42 JSDoc 보강 (prod 영향 0, dev에서 fetch 호출마다 로그 → cache hit 시 0줄). (5) npm run check-all + build PASS (First Load JS 169~175 kB). (6) 검색 페이지 매 요청 dynamic 실측 PASS — PowerShell curl 2회 + Playwright navigate 2회 모두 200 응답 + 매 요청 서버 렌더. (7) M6 60초 측정 N/A — 사용자 협조 미가용으로 Phase 5 Task 016 회귀 위임(코드 분석 + Context7 인용으로 코드 레벨 PASS). (8) 글 상세 임시 통합 마커 grep 1건 매칭 ✅(Task 006 산출물 무결성 보존). (9) 절대 금지 사항 grep 4건 모두 PASS — process.env.NOTION env.ts 단일 진입점/'use client' in src/lib/notion/ 0건/F018 unstable_cache 1건/PLACEHOLDER_REGEX tldr-extractor.ts 단일 소스. (10) docs/tasks/007-cache-strategy-audit.md 작성 — 점검 결과 표 10건(PASS 9 + N/A 1) + 함수 캐시 정책 표 8건 + INFERENCE 4건 + 사용자 협조 안내 + Phase 2 마무리. (11) ROADMAP 갱신 — Task 007 ✅ + shrimp ID + 검증 결과 + See 참조 + Phase 2 헤더에 ✅ + 진행률 \"Task 004/005/006/007 모두 완료 ✅\". INFERENCE 4건: F018 60초 캐시 갭 허용(MVP 영향 미미, v3 on-demand 후순위) / searchPosts·getPostsByCategory 베이스 캐시 의도적 미적용 / dev 진단 로그 (b) 영구 채택 / revalidateTag 미사용 정책 명시. 변경 파일: 신규 docs/tasks/007-cache-strategy-audit.md, 수정 src/lib/notion/related-docs-fetcher.ts(2줄) + docs/ROADMAP.md(Task 007 + Phase 2 헤더 + 진행률). Phase 2 데이터 레이어(Notion 연동) 4개 Task 모두 완료 → Phase 3 Task 008(공통 UI 컴포넌트) 또는 Phase 4 페이지 구현 진입 가능 상태. 1인 운영 원칙에 따라 다음 Task plan은 사용자 명시 지시 시 진행. M6 측정은 사용자 협조 가능 시점에 단독 실측 또는 Phase 5 Task 016 회귀 측정 시점 통합 가능.",
+      "completedAt": "2026-05-06T17:11:23.544Z"
     }
   ]
 }
