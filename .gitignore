@@ -42,3 +42,6 @@ yarn-error.log*
 next-env.d.ts
 
 /.claude/settings.local.json
+
+# Playwright MCP 검증 시 자동 생성되는 로그/스냅샷/스크린샷
+.playwright-mcp/
