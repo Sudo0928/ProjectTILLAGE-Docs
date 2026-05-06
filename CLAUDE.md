@@ -9,7 +9,7 @@
 
 - **Framework**: Next.js 15.5.3 (App Router + Turbopack)
 - **Runtime**: React 19.1.0 + TypeScript 5
-- **Styling**: TailwindCSS v4 + shadcn/ui (new-york style)
+- **Styling**: TailwindCSS v4 + shadcn/ui (new-york style) + @tailwindcss/typography
 - **Notion 연동**: @notionhq/client + 자체 블록 렌더러
 - **Forms**: React Hook Form + Zod
 - **UI Components**: Radix UI + Lucide Icons

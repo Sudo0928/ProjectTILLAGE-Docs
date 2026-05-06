@@ -78,7 +78,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 
 미완료 항목으로 다음 두 개가 남아있으며 Phase 1에서 처리합니다.
 
-- ❌ `@notionhq/client`, `@tailwindcss/typography` 미설치 → Phase 1 Task 001
+- ✅ `@notionhq/client`, `@tailwindcss/typography` 설치 완료 → Phase 1 Task 001 See: /docs/tasks/001-deps-and-typography.md
 - ❌ `src/app/layout.tsx`(RootLayout)에 Header/Footer 미통합 → Phase 1 Task 002
 
 ---
@@ -101,7 +101,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 >
 > 기존 6개 속성(항목/분류/상태/작성자/최종 편집 일시/상위·하위 항목)은 손대지 않습니다. **사이트 노출 여부는 신규 `웹 게시` 속성이 단독으로 결정**하며 기존 `상태`(시작 전/진행 중/완료)는 게임 기획 작업 진행도일 뿐 사이트 노출과 무관합니다.
 
-- **Task 001: 의존성 설치 및 타이포그래피 설정** - 우선순위
+- ✅ **Task 001: 의존성 설치 및 타이포그래피 설정** - 완료
   - shrimp ID: `9dfbd998` (Phase 1-001 의존성 설치 및 타이포그래피 설정)
   - `@notionhq/client` 설치 (Notion 공식 SDK)
   - `@tailwindcss/typography` 설치 후 `globals.css`에 plugin 등록 + `prose` 클래스 활용 가능 상태로 만들기
@@ -111,6 +111,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
   - **산출물**: 새 의존성이 반영된 `package.json` / `package-lock.json`, `prose` 적용 가능한 `globals.css`
   - **의존성**: 없음 (Phase 0 완료 위에서 시작)
   - **검증 기준**: `npm run check-all` 통과, `npm run build` 성공, `prose` 클래스가 임시 페이지에서 렌더링되는지 수동 확인
+  - See: /docs/tasks/001-deps-and-typography.md
 
 - **Task 002: 라우트 구조 및 빈 페이지 셸 생성**
   - shrimp ID: `086db9ec` (Phase 1-002 라우트 셸 및 RootLayout 헤더/푸터 통합)
