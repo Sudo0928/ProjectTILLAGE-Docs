@@ -42,6 +42,3 @@ yarn-error.log*
 next-env.d.ts
 
 /.claude/settings.local.json
-
-# shrimp-task-manager runtime data
-/shrimp_data

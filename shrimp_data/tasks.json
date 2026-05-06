@@ -1,0 +1,207 @@
+{
+  "tasks": [
+    {
+      "id": "9dfbd998-2d7c-4689-af9d-1f9b18c99922",
+      "name": "Phase 1-001 의존성 설치 및 타이포그래피 설정",
+      "description": "@notionhq/client(Notion 공식 SDK)와 @tailwindcss/typography(prose 스타일)를 설치하고, Tailwind v4 CSS-first 방식으로 globals.css에 @plugin '@tailwindcss/typography'를 등록한다. 라이트/다크모드 모두에서 prose가 가독성 있게 렌더링됨을 시각 검증한 뒤 임시 placeholder를 제거한다. notion-to-md는 ROADMAP Task 006의 자체 매핑 결정에 따라 미설치. shrimp-rules 9.2(의존성 변경 시 5개 문서 동기화)와 10.1(context7 사전 조회) 강제.",
+      "notes": "Tailwind v4의 @plugin 디렉티브 사용법은 변경 가능성이 있어 context7 사전 조회 필수(rule 10.1). globals.css에 @custom-variant dark가 이미 정의되어 있어 dark:prose-invert는 자연 동작 예상. notion-to-md는 미설치(자체 매핑 노선). prose 검증 placeholder는 검증 후 반드시 제거하여 홈 페이지 본 콘텐츠에 영향 없도록.",
+      "status": "pending",
+      "dependencies": [],
+      "createdAt": "2026-05-06T11:01:30.924Z",
+      "updatedAt": "2026-05-06T11:01:30.924Z",
+      "relatedFiles": [
+        {
+          "path": "package.json",
+          "type": "TO_MODIFY",
+          "description": "@notionhq/client + @tailwindcss/typography 의존성 추가"
+        },
+        {
+          "path": "src/app/globals.css",
+          "type": "TO_MODIFY",
+          "description": "@plugin \"@tailwindcss/typography\"; 한 줄 추가",
+          "lineStart": 1,
+          "lineEnd": 5
+        },
+        {
+          "path": "src/app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "임시 prose placeholder 추가 후 검증 완료 시 제거"
+        },
+        {
+          "path": "README.md",
+          "type": "TO_MODIFY",
+          "description": "기술 스택 섹션에 두 패키지 추가"
+        },
+        {
+          "path": "CLAUDE.md",
+          "type": "REFERENCE",
+          "description": "두 패키지 이미 명시됨 — 변경 없음 확인"
+        },
+        {
+          "path": "docs/PRD.md",
+          "type": "REFERENCE",
+          "description": "두 패키지 이미 명시됨 — 변경 없음 확인"
+        },
+        {
+          "path": "docs/ROADMAP.md",
+          "type": "TO_MODIFY",
+          "description": "Task 001 ✅ + See: /docs/tasks/001-deps-and-typography.md 참조 추가",
+          "lineStart": 68,
+          "lineEnd": 74
+        },
+        {
+          "path": "docs/tasks/001-deps-and-typography.md",
+          "type": "CREATE",
+          "description": "Task 001 명세 파일(빈 체크박스로 시작, 단계 완료마다 체크)"
+        },
+        {
+          "path": "shrimp-rules.md",
+          "type": "REFERENCE",
+          "description": "9.2 다중 파일 동기화 / 10.1 context7 강제 / 12.2 커밋 규칙"
+        }
+      ],
+      "implementationGuide": "1) context7 MCP로 사전 조회: resolve-library-id 'tailwindcss' 후 query-docs로 'Tailwind CSS v4 typography plugin CSS-first @plugin' 검색. 만족스럽지 않으면 researchMode true로 1회 재조회.\\n2) 의존성 설치: npm install @notionhq/client @tailwindcss/typography\\n3) src/app/globals.css 변경: 두 번째 @import 다음에 한 줄 추가 -> @plugin \"@tailwindcss/typography\";\\n4) 임시 prose 시각 검증: src/app/page.tsx 내부에 일회성 <article className=\"prose dark:prose-invert max-w-none\">제목/본문 샘플</article> 삽입 → npm run dev → Playwright MCP로 라이트/다크 토글 스크린샷 → placeholder 제거.\\n5) 다중 파일 동기화(rule 9.2): package.json(자동), README.md 기술 스택 섹션에 두 패키지 한 줄 추가, CLAUDE.md/PRD.md는 이미 명시됨(읽기로 변경 불필요 확인), docs/ROADMAP.md Task 001 항목에 ✅와 See: /docs/tasks/001-deps-and-typography.md 추가.\\n6) docs/tasks/001-deps-and-typography.md 생성. 양식: 헤더/명세/관련 파일/수락 기준/단계 체크리스트(빈 박스로 시작). 단계 진행 시마다 체크박스 갱신.\\n7) 게이트: npm run check-all 통과 → npm run build 통과 → 한국어+이모지 컨벤셔널 커밋(Claude 서명 금지, rule 12.2).",
+      "verificationCriteria": "1) npm run check-all 통과(typecheck+lint+format:check) 2) npm run build(Turbopack) 통과 3) 임시 prose placeholder가 라이트/다크 모드 모두에서 가독성 있게 렌더링됨을 Playwright 스크린샷으로 확인한 후 제거됨 4) globals.css 변경은 @plugin 한 줄 추가로 한정 5) README.md 기술 스택 섹션에 두 패키지 반영 6) docs/ROADMAP.md Task 001 ✅ 및 See 참조 추가 7) docs/tasks/001-deps-and-typography.md가 단계 체크리스트 형태로 존재 8) 한국어+이모지 커밋 1건(Claude 서명 없음)",
+      "analysisResult": "Phase 1 — 애플리케이션 골격 구축. ROADMAP/PRD/shrimp-rules에 따라 (1) Notion SDK + Tailwind v4 typography 플러그인 의존성 추가, (2) 5개 MVP 라우트 셸과 누락되어 있던 RootLayout의 Header/Footer 통합, (3) Phase 2/3가 단일 소스로 import할 도메인 타입 + Notion 응답 정규화 Zod 스키마를 순차 완성한다. 모든 사용자 노출 문자열은 한국어, 식별자는 영문 camelCase, Path alias @/* 강제, Container/cn() 헬퍼 강제, prose는 dark:prose-invert로 다크모드 호환, 페이지의 캐시 전략은 검색만 force-dynamic 나머지는 revalidate=60. 각 Task 완료 게이트는 npm run check-all + npm run build, ROADMAP 체크박스/See 참조, docs/tasks/00X-xxx.md 명세 파일. Phase 1 전체 완료 시 ROADMAP Phase 1 헤더에 ✅ 추가하고 마일스톤 M1(골격 완료)을 충족시킨다."
+    },
+    {
+      "id": "086db9ec-4703-4a45-9be0-f8c134ac8490",
+      "name": "Phase 1-002 라우트 셸 및 RootLayout 헤더/푸터 통합",
+      "description": "shrimp-rules 7.1 라우트 표대로 5개 MVP 라우트(/, /categories, /categories/[slug], /posts/[slug], /search)의 빈 페이지 셸을 생성한다. 또한 RootLayout(src/app/layout.tsx)에 Header/Footer가 누락되어 있는 결함을 정정하여 모든 페이지에서 헤더/푸터가 일관되게 노출되도록 한다. Next.js 15.5.3의 params/searchParams Promise 시그니처를 적용하고, /search는 export const dynamic='force-dynamic', 나머지는 export const revalidate=60을 사전 표기한다. 모든 페이지 본문은 Container 래퍼 강제(rule 6.2).",
+      "notes": "RootLayout의 Header/Footer 누락 정정이 본 Task의 핵심. 메뉴 자체를 변경하지 않으므로 9.1(main-nav/mobile-nav 동기화) 트리거 없음. <main className='flex-1'> 시맨틱 마크업으로 Phase 5 Task 015 접근성 점검을 사전 충족. 페이지에 max-w-* 직접 사용 절대 금지(rule 13). 5개 셸 모두 한국어 placeholder(rule 6.5, 12번 금지).",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "9dfbd998-2d7c-4689-af9d-1f9b18c99922"
+        }
+      ],
+      "createdAt": "2026-05-06T11:01:30.924Z",
+      "updatedAt": "2026-05-06T11:01:30.924Z",
+      "relatedFiles": [
+        {
+          "path": "src/app/layout.tsx",
+          "type": "TO_MODIFY",
+          "description": "Header/Footer 통합 + 시맨틱 main 태그 + flex 컬럼 레이아웃",
+          "lineStart": 1,
+          "lineEnd": 46
+        },
+        {
+          "path": "src/app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "export const revalidate = 60 추가"
+        },
+        {
+          "path": "src/app/categories/page.tsx",
+          "type": "CREATE",
+          "description": "카테고리 인덱스 셸(서버 컴포넌트, ISR 60s)"
+        },
+        {
+          "path": "src/app/categories/[slug]/page.tsx",
+          "type": "CREATE",
+          "description": "카테고리 상세 셸(서버, ISR 60s, params Promise)"
+        },
+        {
+          "path": "src/app/posts/[slug]/page.tsx",
+          "type": "CREATE",
+          "description": "글 상세 셸(서버, ISR 60s, params Promise)"
+        },
+        {
+          "path": "src/app/search/page.tsx",
+          "type": "CREATE",
+          "description": "검색 결과 셸(서버, dynamic='force-dynamic', searchParams Promise)"
+        },
+        {
+          "path": "src/components/layout/header.tsx",
+          "type": "DEPENDENCY",
+          "description": "RootLayout 통합 대상(이번 Task에서 변경 없음)"
+        },
+        {
+          "path": "src/components/layout/footer.tsx",
+          "type": "DEPENDENCY",
+          "description": "RootLayout 통합 대상(이번 Task에서 변경 없음)"
+        },
+        {
+          "path": "src/components/layout/container.tsx",
+          "type": "DEPENDENCY",
+          "description": "모든 셸 본문의 래퍼(rule 6.2)"
+        },
+        {
+          "path": "docs/tasks/002-route-shells.md",
+          "type": "CREATE",
+          "description": "Task 002 명세 파일"
+        },
+        {
+          "path": "docs/ROADMAP.md",
+          "type": "TO_MODIFY",
+          "description": "Task 002 ✅ + See: /docs/tasks/002-route-shells.md 참조",
+          "lineStart": 75,
+          "lineEnd": 83
+        },
+        {
+          "path": "shrimp-rules.md",
+          "type": "REFERENCE",
+          "description": "7.1 라우트 표 / 5.3 캐시 전략 / 6.2 Container 강제 / 10.4 UI 검증"
+        }
+      ],
+      "implementationGuide": "1) context7 MCP로 사전 조회: resolve-library-id 'next.js' 후 query-docs로 'Next.js 15 async page params searchParams Promise dynamic route'.\\n2) src/app/layout.tsx 수정(★ 핵심 정정): Header/Footer import 추가 후 ThemeProvider 내부 children을 다음 구조로 감쌈:\\n  <div className=\"flex min-h-screen flex-col\"><Header /><main className=\"flex-1\">{children}</main><Footer /></div><Toaster />\\n3) src/app/page.tsx 정리: 파일 상단에 export const revalidate = 60 추가, 기존 placeholder 본문 유지.\\n4) 신규 페이지 셸 4개 생성(모두 서버 컴포넌트, 한국어 placeholder, Container 사용):\\n  - src/app/categories/page.tsx: export const revalidate = 60 + async function CategoriesPage(): Container 안에 '카테고리'/'곧 카테고리 목록이 표시됩니다' 표기.\\n  - src/app/categories/[slug]/page.tsx: revalidate=60 + Props { params: Promise<{slug:string}> } + const { slug } = await params; Container 안에 '카테고리: {slug}' 및 안내 문구.\\n  - src/app/posts/[slug]/page.tsx: revalidate=60 + 동일 Promise 패턴 + Container 안에 '글: {slug}' 및 안내 문구.\\n  - src/app/search/page.tsx: export const dynamic='force-dynamic' + Props { searchParams: Promise<{ q?: string }> } + const { q } = await searchParams; Container 안에 q 존재 시 \\\"'{q}' 검색 결과\\\" 부재 시 '검색' 헤드라인.\\n5) 각 셸 본문 패턴: <Container><div className=\"py-12\"><h1>...</h1><p className=\"text-muted-foreground mt-2\">...</p></div></Container> (홈 기존 패턴과 일치).\\n6) 검증: npm run dev → 5개 경로(/, /categories, /categories/dummy, /posts/dummy, /search?q=test) 수동 점검(200, 헤더/푸터 노출, 콘솔 에러 0건, 다크/라이트 토글 정상). Playwright MCP로 5개 경로 순회 스크린샷 1회(rule 10.4 권장).\\n7) 게이트: npm run check-all + npm run build 통과.\\n8) 문서: docs/tasks/002-route-shells.md 생성, docs/ROADMAP.md Task 002 ✅ + See 참조 추가.",
+      "verificationCriteria": "1) 5개 라우트(/, /categories, /categories/[slug], /posts/[slug], /search) 모두 200 응답 2) 모든 페이지에 Header/Footer 노출(라이트/다크 토글 정상) 3) 콘솔 에러 0건 4) /search 동적 처리 확인(?q= 변경 시 즉시 반영, 캐시 흔적 없음) 5) /categories/[slug] 및 /posts/[slug]에서 await params 정상 동작 6) page.tsx 4개에 revalidate=60 또는 dynamic='force-dynamic' 사전 표기 7) npm run check-all + npm run build 통과 8) docs/ROADMAP.md Task 002 ✅ + See 참조 9) Playwright MCP 스크린샷(선택)으로 5개 경로 시각 확인",
+      "analysisResult": "Phase 1 — 애플리케이션 골격 구축. ROADMAP/PRD/shrimp-rules에 따라 (1) Notion SDK + Tailwind v4 typography 플러그인 의존성 추가, (2) 5개 MVP 라우트 셸과 누락되어 있던 RootLayout의 Header/Footer 통합, (3) Phase 2/3가 단일 소스로 import할 도메인 타입 + Notion 응답 정규화 Zod 스키마를 순차 완성한다. 모든 사용자 노출 문자열은 한국어, 식별자는 영문 camelCase, Path alias @/* 강제, Container/cn() 헬퍼 강제, prose는 dark:prose-invert로 다크모드 호환, 페이지의 캐시 전략은 검색만 force-dynamic 나머지는 revalidate=60. 각 Task 완료 게이트는 npm run check-all + npm run build, ROADMAP 체크박스/See 참조, docs/tasks/00X-xxx.md 명세 파일. Phase 1 전체 완료 시 ROADMAP Phase 1 헤더에 ✅ 추가하고 마일스톤 M1(골격 완료)을 충족시킨다."
+    },
+    {
+      "id": "34264159-e336-45eb-b547-67bba3660523",
+      "name": "Phase 1-003 도메인 타입 및 Zod 스키마 정의",
+      "description": "PRD 데이터 모델(Post/PostContent/Category)을 src/types/post.ts에 도메인 타입으로 정의하고, Notion 응답을 안전하게 정규화할 Zod 스키마와 검색 파라미터 검증 스키마를 src/lib/notion/schemas.ts에 정의한다. 도메인 타입은 @notionhq/client의 PageObjectResponse/BlockObjectResponse 타입에 의존하지 않으며, schemas.ts 내부 변환 함수만 SDK 인지(Phase 2 Task 004에서 변환 함수 추가). PostCardProps는 Pick<Post,...>로 정의하여 Post 진화 시 자동 동기화. SearchParamsSchema는 trim+min(1)+max(200) 제약을 둔다.",
+      "notes": "NotionBlock.content를 unknown으로 두는 이유는 Task 006에서 본격 매핑되기 때문(현재 구조가 미래 확장 차단하지 않음). PostCardProps를 Pick으로 정의하여 Post 진화 시 자동 동기화. Notion DB property 이름은 PRD 가정이며, schemas.ts 상단 주석에 가정을 명시하여 Phase 2에서 실측과 어긋나면 한 곳에서만 정정 가능. process.env 직접 사용 금지(rule 6번 금지) — 본 Task는 env 사용처 없음. NEXT_PUBLIC_* 접두사로 NOTION_TOKEN 노출 금지(rule 8번 금지) — 본 Task는 토큰 사용 없음.",
+      "status": "pending",
+      "dependencies": [
+        {
+          "taskId": "086db9ec-4703-4a45-9be0-f8c134ac8490"
+        }
+      ],
+      "createdAt": "2026-05-06T11:01:30.924Z",
+      "updatedAt": "2026-05-06T11:01:30.924Z",
+      "relatedFiles": [
+        {
+          "path": "src/types/post.ts",
+          "type": "CREATE",
+          "description": "도메인 타입(Post, PostContent, Category, NotionBlock, PostCardProps) — Notion SDK 비의존"
+        },
+        {
+          "path": "src/lib/notion/schemas.ts",
+          "type": "CREATE",
+          "description": "Notion 응답 정규화 Zod 스키마 + SearchParamsSchema + 가정 property 이름 주석"
+        },
+        {
+          "path": "src/lib/env.ts",
+          "type": "REFERENCE",
+          "description": "기존 Zod 사용 패턴 참고(스타일 일관성)"
+        },
+        {
+          "path": "docs/PRD.md",
+          "type": "REFERENCE",
+          "description": "데이터 모델 표(Post/PostContent/Category) — 159~188행"
+        },
+        {
+          "path": "docs/tasks/003-domain-types-schemas.md",
+          "type": "CREATE",
+          "description": "Task 003 명세 파일"
+        },
+        {
+          "path": "docs/ROADMAP.md",
+          "type": "TO_MODIFY",
+          "description": "Task 003 ✅ + Phase 1 헤더 ✅ + See: /docs/tasks/003-domain-types-schemas.md 참조",
+          "lineStart": 64,
+          "lineEnd": 91
+        },
+        {
+          "path": "shrimp-rules.md",
+          "type": "REFERENCE",
+          "description": "5.5 Notion 함수 위치 / 8 Form/검증 Zod / 4 코드 포맷"
+        }
+      ],
+      "implementationGuide": "1) src/types/post.ts 생성 — 도메인 타입(SDK 비의존):\\n  export interface Post { id: string; slug: string; title: string; summary?: string; category: string | null; tags: string[]; publishedAt: string; status: '발행됨' | '초안'; coverImage?: string | null }\\n  export interface NotionBlock { id: string; type: 'paragraph'|'heading_1'|'heading_2'|'heading_3'|'bulleted_list_item'|'numbered_list_item'|'image'|'code'|'quote'|'divider'; content: unknown }\\n  export interface PostContent { postId: string; blocks: NotionBlock[]; coverImage: string | null; lastEditedAt: string }\\n  export interface Category { name: string; slug: string; postCount: number }\\n  export type PostCardProps = Pick<Post, 'id'|'slug'|'title'|'summary'|'category'|'tags'|'publishedAt'|'coverImage'>\\n2) src/lib/notion/schemas.ts 생성 — Zod 스키마 + 검색 파라미터:\\n  파일 상단에 한국어 주석으로 PRD 가정 property 이름 명시 → '// PRD/ROADMAP 기준 가정 Notion property: Title, Category, Tags, Published, Status. Phase 2 Task 004에서 실측과 다르면 본 스키마 즉시 갱신.'\\n  import { z } from 'zod'\\n  - NotionRichTextSchema: { plain_text, href?, annotations? }\\n  - NotionTitlePropertySchema: { type: 'title', title: NotionRichTextSchema[] }\\n  - NotionSelectPropertySchema: { type: 'select', select: { name } | null }\\n  - NotionMultiSelectPropertySchema: { type: 'multi_select', multi_select: { name }[] }\\n  - NotionDatePropertySchema: { type: 'date', date: { start } | null }\\n  - NotionStatusPropertySchema: { type: 'status', status: { name } | null }\\n  - PostPropertiesSchema = z.object({ Title, Category?, Tags?, Published?, Status? }).passthrough()\\n  - SearchParamsSchema = z.object({ q: z.string().trim().min(1).max(200) })\\n  - export type SearchParams = z.infer<typeof SearchParamsSchema>\\n3) Phase 2/3가 import할 명확한 export 경로 보장: '@/types/post', '@/lib/notion/schemas'.\\n4) 검증: npm run typecheck → 0 에러 / npm run check-all 통과 / npm run build 통과.\\n5) 문서: docs/tasks/003-domain-types-schemas.md 생성, docs/ROADMAP.md Task 003 ✅ + See 참조, Phase 1 모든 Task 완료 후 'Phase 1: 애플리케이션 골격 구축' 헤더에 ✅ 추가 → 마일스톤 M1(골격 완료) 달성.",
+      "verificationCriteria": "1) src/types/post.ts에 Post/PostContent/Category/NotionBlock/PostCardProps 모두 export 되며 SDK 의존 없음(@notionhq/client import 없음) 2) src/lib/notion/schemas.ts에 5개 Notion property 스키마 + PostPropertiesSchema + SearchParamsSchema/SearchParams 모두 export 3) schemas.ts 상단 한국어 주석에 가정 property 이름 명시 4) npm run typecheck 0 에러 5) npm run check-all + npm run build 통과 6) docs/ROADMAP.md Task 003 ✅ + Phase 1 헤더 ✅ + See 참조 추가 7) Phase 2 Task 004가 'import { Post } from \\\"@/types/post\\\"' 형태로 import 가능한 상태",
+      "analysisResult": "Phase 1 — 애플리케이션 골격 구축. ROADMAP/PRD/shrimp-rules에 따라 (1) Notion SDK + Tailwind v4 typography 플러그인 의존성 추가, (2) 5개 MVP 라우트 셸과 누락되어 있던 RootLayout의 Header/Footer 통합, (3) Phase 2/3가 단일 소스로 import할 도메인 타입 + Notion 응답 정규화 Zod 스키마를 순차 완성한다. 모든 사용자 노출 문자열은 한국어, 식별자는 영문 camelCase, Path alias @/* 강제, Container/cn() 헬퍼 강제, prose는 dark:prose-invert로 다크모드 호환, 페이지의 캐시 전략은 검색만 force-dynamic 나머지는 revalidate=60. 각 Task 완료 게이트는 npm run check-all + npm run build, ROADMAP 체크박스/See 참조, docs/tasks/00X-xxx.md 명세 파일. Phase 1 전체 완료 시 ROADMAP Phase 1 헤더에 ✅ 추가하고 마일스톤 M1(골격 완료)을 충족시킨다."
+    }
+  ]
+}
