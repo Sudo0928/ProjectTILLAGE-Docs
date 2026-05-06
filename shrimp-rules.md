@@ -7,35 +7,43 @@
 
 ## 1. 프로젝트 개요
 
-- **본질**: Notion 기반 **공개 읽기 전용** 문서 발행 사이트 (1인 개발 MVP)
-- **데이터 소스**: Notion API 단독 — 자체 DB 없음, 쓰기 경로 없음
-- **렌더링 전략**: 서버 컴포넌트 + ISR(`revalidate = 60`) 기본, **검색 페이지만 동적**
+- **본질**: Notion 기반 **공개 읽기 전용** 문서 발행 사이트 (1인 개발 MVP). 비기획자(아티스트/사운드/외부 프로그래머/마케터/외부) 5개 페르소나 친화 진입 큐레이션 + 작성 패턴 자동 변환(F015~F019) 포함
+- **대상 게임**: Project TILLAGE (포스트 아포칼립스 농사+생존 게임)
+- **데이터 소스**: Notion API 단독 — 자체 DB 없음, 쓰기 경로 없음. 데이터베이스 ID `345bcbcfa9ea80b38ec5c777f19c3442`("기획서 모음")
+- **렌더링 전략**: 서버 컴포넌트 + ISR(`revalidate = 60`) 기본, **검색 페이지만 동적**(`dynamic = 'force-dynamic'`)
 - **사용자 언어**: 한국어 (`<html lang="ko">`)
 - **배포**: Vercel
 - **OS**: Windows 11 (`.claude/hooks/*.sh`는 Git Bash가 PATH에 있어야 동작)
+- **정식 문서**: `docs/PRD.md`(F001~F019, 19개 기능) + `docs/ROADMAP.md`(7 Phase, 19 Task, 10 마일스톤). 초기 골격 버전은 `docs/PRD.archive.md` / `docs/ROADMAP.archive.md`에 보존 — 변경/삭제 금지
 
 ---
 
 ## 2. 디렉토리 책임 분리
 
-| 경로                          | 책임                                                                | 직접 수정 가능                                 |
-| ----------------------------- | ------------------------------------------------------------------- | ---------------------------------------------- |
-| `src/app/`                    | App Router 라우트, 페이지, 레이아웃 (서버 컴포넌트 기본)            | YES                                            |
-| `src/components/ui/`          | shadcn/ui 원본 컴포넌트                                             | **NO** — `npx shadcn@latest add`로만 추가/갱신 |
-| `src/components/layout/`      | `Container`, `Header`, `Footer`                                     | YES                                            |
-| `src/components/navigation/`  | `MainNav`, `MobileNav` (★ 동기화 규칙 9.1 참조)                     | YES                                            |
-| `src/components/providers/`   | `ThemeProvider` 등 클라이언트 프로바이더                            | YES                                            |
-| `src/components/posts/`       | 글 카드/그리드/상태 (Phase 3에서 생성 예정)                         | YES                                            |
-| `src/lib/notion/`             | Notion 클라이언트, 데이터 함수, 블록 렌더러 (Phase 2에서 생성 예정) | YES — **서버 전용**                            |
-| `src/lib/env.ts`              | Zod 기반 환경 변수 단일 진입점                                      | YES                                            |
-| `src/lib/utils.ts`            | `cn()` 헬퍼만 보유                                                  | YES                                            |
-| `src/types/`                  | 도메인 타입 (Phase 1에서 생성 예정)                                 | YES                                            |
-| `docs/`                       | PRD/ROADMAP/가이드 — AI 참조용                                      | YES                                            |
-| `docs/tasks/`                 | Task 명세 (`XXX-description.md`)                                    | YES                                            |
-| `.claude/hooks/`              | Slack 알림 훅 — exit 0 보장 필수 (10번 항목)                        | 조건부                                         |
-| `.claude/settings.local.json` | Claude Code 권한 설정                                               | **NO** — Self-Modification 차단됨              |
-| `.mcp.json`                   | MCP 서버 등록                                                       | YES (3절 환경 특수 사항 참조)                  |
-| `shrimp_data/`                | shrimp-task-manager 영속 데이터                                     | NO — MCP 서버 자동 관리                        |
+| 경로                                 | 책임                                                                                                                                                                     | 직접 수정 가능                                 |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------- |
+| `src/app/`                           | App Router 라우트, 페이지, 레이아웃 (서버 컴포넌트 기본)                                                                                                                 | YES                                            |
+| `src/components/ui/`                 | shadcn/ui 원본 컴포넌트                                                                                                                                                  | **NO** — `npx shadcn@latest add`로만 추가/갱신 |
+| `src/components/layout/`             | `Container`, `Header`, `Footer`                                                                                                                                          | YES                                            |
+| `src/components/navigation/`         | `MainNav`, `MobileNav` (★ 동기화 규칙 9.1 참조)                                                                                                                          | YES                                            |
+| `src/components/providers/`          | `ThemeProvider` 등 클라이언트 프로바이더                                                                                                                                 | YES                                            |
+| `src/components/posts/`              | 글 카드/그리드/상태 + F015 RecommendCard/PersonaCard + F016 TldrBox + F017 CalloutIntro/TableCellBadge/MissingItemsCollapsible + F018/F019 RelatedPostsSection (Phase 3) | YES                                            |
+| `src/lib/notion/`                    | Notion 클라이언트, 데이터 함수(7종), 블록 렌더러, 작성 패턴 변환 유틸(F016/F017/F018), persona-curation, 메모이즈 wrapper                                                | YES — **서버 전용**                            |
+| `src/lib/notion/persona-curation.ts` | F015 5개 페르소나 ↔ 분류 묶음 정적 매핑 (서로 다른 묶음 보장)                                                                                                           | YES                                            |
+| `src/lib/site-config.ts`             | F015 HERO Logline, 사이트 기본 메타데이터 등 정적 상수 단일 소스                                                                                                         | YES                                            |
+| `src/lib/env.ts`                     | Zod 기반 환경 변수 단일 진입점                                                                                                                                           | YES                                            |
+| `src/lib/utils.ts`                   | `cn()` 헬퍼만 보유                                                                                                                                                       | YES                                            |
+| `src/types/post.ts`                  | 도메인 타입 (`Post` 영문 키 `publication` — `status` 아님)                                                                                                               | YES                                            |
+| `docs/PRD.md`                        | 정식 PRD(v2 — F001~F019)                                                                                                                                                 | YES (rule 9.4 동기화 필수)                     |
+| `docs/ROADMAP.md`                    | 정식 ROADMAP(v2 — 7 Phase, 19 Task, 10 마일스톤)                                                                                                                         | YES (rule 9.4 동기화 필수)                     |
+| `docs/PRD.archive.md`                | 초기 골격 PRD 보존본                                                                                                                                                     | **NO** — 변경/삭제 금지                        |
+| `docs/ROADMAP.archive.md`            | 초기 골격 ROADMAP 보존본                                                                                                                                                 | **NO** — 변경/삭제 금지                        |
+| `docs/`                              | PRD/ROADMAP/가이드 — AI 참조용                                                                                                                                           | YES                                            |
+| `docs/tasks/`                        | Task 명세 (`XXX-description.md`)                                                                                                                                         | YES                                            |
+| `.claude/hooks/`                     | Slack 알림 훅 — exit 0 보장 필수 (10번 항목)                                                                                                                             | 조건부                                         |
+| `.claude/settings.local.json`        | Claude Code 권한 설정                                                                                                                                                    | **NO** — Self-Modification 차단됨              |
+| `.mcp.json`                          | MCP 서버 등록                                                                                                                                                            | YES (3절 환경 특수 사항 참조)                  |
+| `shrimp_data/`                       | shrimp-task-manager 영속 데이터                                                                                                                                          | NO — MCP 서버 자동 관리                        |
 
 ---
 
@@ -92,9 +100,12 @@ const token = process.env.NOTION_TOKEN
 
 ### 5.2 발행 상태 필터 — 모든 조회 함수에 필수
 
-- **모든 글 조회 함수는 Notion property `Status === '발행됨'`로 필터링**
-- `초안` 상태는 어떤 경로에서도 사용자에게 노출 금지
-- 검색/카테고리 함수도 동일 필터 적용
+- **모든 글 조회 함수는 Notion 속성 `웹 게시 === '발행됨'`로 필터링** (한글 속성명, `select` 타입). 도메인 영문 키는 `Post.publication`(`status` 아님 — Notion 한글 `상태`(status 타입) 속성과의 인지 오류 방지)
+- `초안` 또는 미설정 글은 어떤 경로에서도 사용자에게 노출 금지
+- 검색/카테고리/추천/관련 글 함수 모두 동일 필터 적용
+- **F018 연동 문서 카드의 멘션 페이지도 같은 필터** — `웹 게시 != '발행됨'`인 멘션은 카드에서 숨김. 노출 가능 멘션이 0개면 섹션 영역 자체 숨김
+- 기존 한글 속성 `상태`(시작 전/진행 중/완료, status 타입)는 게임 기획 작업 진행도이며 **사이트 노출과 무관**. 손대지 않는다
+- 한글 ↔ 영문 매핑 표는 `docs/PRD.md` "속성 매핑 표" 섹션이 단일 진실 소스
 
 ### 5.3 캐시 전략 분기
 
@@ -113,10 +124,25 @@ const token = process.env.NOTION_TOKEN
 
 ### 5.5 Notion 함수 작성 위치 및 형태
 
-- 위치: `src/lib/notion/` 하위 (`client.ts`, `posts.ts`, `categories.ts`)
+- 위치: `src/lib/notion/` 하위 (`client.ts`, `posts.ts`, `categories.ts`, `slug.ts`, `schemas.ts`, `persona-curation.ts`, `render-blocks.tsx`, `section-utils.ts`, `tldr-extractor.ts`, `reading-time.ts`, `related-docs-fetcher.ts`)
 - 환경 변수 미설정 시: 친절한 한국어 에러 메시지 throw, **빌드 차단 금지** (`env.ts`가 optional로 처리)
 - 응답은 `src/types/post.ts`의 `Post` / `PostContent` / `Category` 타입으로 정규화
 - 결과 타입에 `{ posts, error }` 또는 명시적 fallback 포함하여 빈 결과/실패를 호출부가 구분 가능하게
+- **표준 함수 7종**(MVP 범위):
+  1. `getPublishedPosts()` — F001 (`발행일` 내림차순, 미설정 시 `최종 편집 일시` fallback)
+  2. `getPostBySlug(slug)` — F002
+  3. `getCategories()` — F003 (단일 query 후 메모리 집계, 17개 분류 분할 query 회피)
+  4. `getPostsByCategory(slug)` — F003
+  5. `searchPosts(query)` — F004 (제목/태그 부분 일치, 소문자 정규화)
+  6. `getRecommendedPosts(limit)` — F015 (`추천 순위` 1~3, 동률 시 발행일 내림차순)
+  7. `getRelatedPostsByCategory(category, currentId, limit)` — F019 (LIMIT (limit+1) 후 currentId 제외)
+
+### 5.6 v2 변환·캐싱 강제 사항 (★ 빠지면 비기획자 진입 실패)
+
+- **F018 멘션 메타 fetch는 반드시 메모이즈** — `unstable_cache` 또는 React 19 `cache()` wrapper로 동일 페이지 fetch 1회만 발생. Notion 평균 3 req/s rate limit burst 방지
+- **F019 동일 분류 추천에서 `id != currentId`는 단일 query 불가** — Notion API에 `does_not_equal` ID 필터 부재. 반드시 `LIMIT (limit+1)` fetch 후 서버 컴포넌트에서 클라이언트 후처리
+- **F016 TL;DR 추출은 4단계 + placeholder fall-through 의무** — 각 단계에서 본문이 빈 문자열이거나 `✏️ [작성 필요]`/`[TBD]`/`[작성중]` 패턴이면 다음 단계로. 누락 시 비기획자 진입 첫 박스가 placeholder로 노출됨
+- **F017 패턴 매칭은 Notion 블록 type 기반** — callout 인식은 `block.callout.icon.emoji === '💡'`(paragraph 내 ">" + emoji 아님). 표 셀 `[확정]/[임시]`는 `table_row.cells[].rich_text[].plain_text` split-replace
 
 ---
 
@@ -165,13 +191,13 @@ import { cn } from '@/lib/utils'
 
 ### 7.1 MVP 라우트 표
 
-| URL                  | 파일 위치                            | 렌더링   | 관련 PRD 기능                |
-| -------------------- | ------------------------------------ | -------- | ---------------------------- |
-| `/`                  | `src/app/page.tsx`                   | ISR      | F001, F010, F011, F012, F013 |
-| `/categories`        | `src/app/categories/page.tsx`        | ISR      | F003, F010, F011             |
-| `/categories/[slug]` | `src/app/categories/[slug]/page.tsx` | ISR      | F001, F003, F010-F013        |
-| `/search`            | `src/app/search/page.tsx`            | **동적** | F001, F004, F010-F013        |
-| `/posts/[slug]`      | `src/app/posts/[slug]/page.tsx`      | ISR      | F002, F010-F014              |
+| URL                  | 파일 위치                            | 렌더링   | 관련 PRD 기능                                           |
+| -------------------- | ------------------------------------ | -------- | ------------------------------------------------------- |
+| `/`                  | `src/app/page.tsx`                   | ISR      | F001, F010, F011, F012, F013, **F015**, **F019**        |
+| `/categories`        | `src/app/categories/page.tsx`        | ISR      | F003, F010, F011, F013                                  |
+| `/categories/[slug]` | `src/app/categories/[slug]/page.tsx` | ISR      | F001, F003, F010-F013, **F019**                         |
+| `/search`            | `src/app/search/page.tsx`            | **동적** | F001, F004, F010-F013, **F019**                         |
+| `/posts/[slug]`      | `src/app/posts/[slug]/page.tsx`      | ISR      | F002, F010-F014, **F016**, **F017**, **F018**, **F019** |
 
 ### 7.2 MVP 외 라우트 — **추가 금지**
 
@@ -240,14 +266,16 @@ PRD "MVP 이후 (제외)"에 해당하는 라우트는 어떤 경우에도 추�
 
 ### 9.4 MVP 범위 변경
 
-PRD 기능 ID(F001~F014) 추가/제거/변경 시 다음을 함께 갱신:
+PRD 기능 ID(F001~F019) 추가/제거/변경 시 다음을 함께 갱신:
 
-1. `docs/PRD.md` "기능 명세" 표
+1. `docs/PRD.md` "기능 명세" 표 (3개 카테고리: 핵심 / 지원 / v2 비기획자 친화)
 2. `docs/PRD.md` "페이지별 상세 기능" 표 (구현 기능 라인)
-3. `docs/PRD.md` 정합성 검증 결과 섹션
-4. `docs/ROADMAP.md` 해당 Phase Task
+3. `docs/PRD.md` "정합성 검증 결과" 섹션
+4. `docs/ROADMAP.md` 해당 Phase Task + F-ID 매핑
 5. `CLAUDE.md` "MVP 범위" / "MVP 제외" 섹션
-6. `README.md` "핵심 기능 (MVP)" 섹션
+6. `README.md` "핵심 기능 (MVP)" 섹션 (v1/v2 분리 표기)
+7. 본 `shrimp-rules.md` 7.1 라우트 표의 F-ID 매핑 + 11번 절대 금지 사항(필요 시)
+8. `docs/PRD.archive.md` / `docs/ROADMAP.archive.md`는 변경하지 않음 (보존본)
 
 ### 9.5 Slack 알림 훅 변경
 
@@ -256,6 +284,20 @@ PRD 기능 ID(F001~F014) 추가/제거/변경 시 다음을 함께 갱신:
 1. `slack-notify.mjs`의 `buildBlocks` 함수에 새 type 분기 추가
 2. 해당 type의 래퍼 셸(`.claude/hooks/<type>-hook.sh`) 추가 — exit 0 보장 (10번 항목)
 3. 훅 등록 (`.claude/settings.local.json` `hooks` 블록) — Claude Code가 자동 추가하므로 직접 편집 금지
+
+### 9.6 Notion DB 스키마 변경 (속성 추가/제거/타입 변경)
+
+"기획서 모음" DB의 속성을 변경할 때 다음을 함께 갱신:
+
+1. `docs/PRD.md` "현재 존재하는 속성" / "추가해야 할 속성" 표
+2. `docs/PRD.md` "도메인 타입" 표(`Post`/`PostContent`/`Category`)
+3. `docs/PRD.md` "속성 매핑 표"(한글 ↔ 영문 키)
+4. `src/types/post.ts` 도메인 타입
+5. `src/lib/notion/schemas.ts` Zod 스키마 + 한글 속성 키
+6. 영향 받는 데이터 함수(`src/lib/notion/posts.ts` 등) — 정렬 기준/필터 키 정정
+7. `CLAUDE.md` "Notion 연동" 섹션 (필요 시)
+
+> 단일 진실 소스: `docs/PRD.md` "속성 매핑 표". 코드와 문서가 어긋나면 PRD 표를 기준으로 정정.
 
 ---
 
@@ -302,26 +344,31 @@ PRD 기능 ID(F001~F014) 추가/제거/변경 시 다음을 함께 갱신:
 
 ## 11. 절대 금지 사항 (Prohibited Actions)
 
-| #   | 금지 행위                                                     | 이유                                                        |
-| --- | ------------------------------------------------------------- | ----------------------------------------------------------- |
-| 1   | `.claude/settings.local.json` 직접 편집                       | Claude Code가 자동 관리; Self-Modification 차단됨           |
-| 2   | `.env`, `.env.local` 커밋                                     | `.gitignore`에 차단되어 있으나 우회 시도 금지               |
-| 3   | `git commit --no-verify`                                      | Husky pre-commit/lint-staged 우회 (사용자 명시 요청 시에만) |
-| 4   | `git push --force` to `main`                                  | 메인 브랜치 강제 푸시                                       |
-| 5   | `src/components/ui/*` 직접 수정                               | shadcn 업그레이드 시 충돌; CLI로만 갱신                     |
-| 6   | `process.env.*` 직접 사용                                     | `@/lib/env`의 Zod 검증 회피                                 |
-| 7   | `'use client'` 컴포넌트에서 `@notionhq/client` import         | 서버 토큰 노출 위험                                         |
-| 8   | `NOTION_TOKEN`을 `NEXT_PUBLIC_*`로 노출                       | 보안 사고 — 즉시 키 폐기 필요                               |
-| 9   | `Status=초안` Notion 페이지를 사용자에게 노출                 | PRD 위반                                                    |
-| 10  | `slack-notify.mjs`의 `process.exitCode = 0` 보장 제거         | 알림 실패가 Claude 작업 흐름 차단                           |
-| 11  | MVP 제외 기능(인증/댓글/작성/다국어/RSS) 라우트·컴포넌트 추가 | PRD 범위 위반 — PRD 선행 갱신 필요                          |
-| 12  | 영문 사용자 노출 UI 문자열                                    | 사이트 언어는 한국어                                        |
-| 13  | 페이지에 `max-w-*` 클래스 직접 사용                           | `Container` 사용 강제                                       |
-| 14  | 클래스 결합에 문자열 템플릿(`` `${a} ${b}` ``)                | `cn()` 헬퍼로 일원화 (Tailwind merge 충돌)                  |
-| 15  | `docs/PRD.md`/`CLAUDE.md` 미반영 신규 기능 추가               | 문서-코드 정합성 위반                                       |
-| 16  | `main-nav.tsx`만 또는 `mobile-nav.tsx`만 단독 수정            | 9.1 동기화 규칙 위반                                        |
-| 17  | `lucide-react` 외 아이콘 라이브러리 추가                      | 트리쉐이킹/번들 크기 정책 위반                              |
-| 18  | `.claude/hooks/*.sh`을 PowerShell/CMD 문법으로 작성           | bash 의존; Git Bash 환경에서 실행됨                         |
+| #   | 금지 행위                                                                                  | 이유                                                                                         |
+| --- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| 1   | `.claude/settings.local.json` 직접 편집                                                    | Claude Code가 자동 관리; Self-Modification 차단됨                                            |
+| 2   | `.env`, `.env.local` 커밋                                                                  | `.gitignore`에 차단되어 있으나 우회 시도 금지                                                |
+| 3   | `git commit --no-verify`                                                                   | Husky pre-commit/lint-staged 우회 (사용자 명시 요청 시에만)                                  |
+| 4   | `git push --force` to `main`                                                               | 메인 브랜치 강제 푸시                                                                        |
+| 5   | `src/components/ui/*` 직접 수정                                                            | shadcn 업그레이드 시 충돌; CLI로만 갱신                                                      |
+| 6   | `process.env.*` 직접 사용                                                                  | `@/lib/env`의 Zod 검증 회피                                                                  |
+| 7   | `'use client'` 컴포넌트에서 `@notionhq/client` import                                      | 서버 토큰 노출 위험                                                                          |
+| 8   | `NOTION_TOKEN`을 `NEXT_PUBLIC_*`로 노출                                                    | 보안 사고 — 즉시 키 폐기 필요                                                                |
+| 9   | `웹 게시 != '발행됨'` Notion 페이지를 사용자에게 노출 (글 자체 + F018 멘션 카드 모두 포함) | PRD 위반 — 5.2 정책 위반                                                                     |
+| 10  | `slack-notify.mjs`의 `process.exitCode = 0` 보장 제거                                      | 알림 실패가 Claude 작업 흐름 차단                                                            |
+| 11  | MVP 제외 기능(인증/댓글/작성/다국어/RSS) 라우트·컴포넌트 추가                              | PRD 범위 위반 — PRD 선행 갱신 필요                                                           |
+| 12  | 영문 사용자 노출 UI 문자열                                                                 | 사이트 언어는 한국어                                                                         |
+| 13  | 페이지에 `max-w-*` 클래스 직접 사용                                                        | `Container` 사용 강제                                                                        |
+| 14  | 클래스 결합에 문자열 템플릿(`` `${a} ${b}` ``)                                             | `cn()` 헬퍼로 일원화 (Tailwind merge 충돌)                                                   |
+| 15  | `docs/PRD.md`/`CLAUDE.md` 미반영 신규 기능 추가                                            | 문서-코드 정합성 위반                                                                        |
+| 16  | `main-nav.tsx`만 또는 `mobile-nav.tsx`만 단독 수정                                         | 9.1 동기화 규칙 위반                                                                         |
+| 17  | `lucide-react` 외 아이콘 라이브러리 추가                                                   | 트리쉐이킹/번들 크기 정책 위반                                                               |
+| 18  | `.claude/hooks/*.sh`을 PowerShell/CMD 문법으로 작성                                        | bash 의존; Git Bash 환경에서 실행됨                                                          |
+| 19  | F018 연동 문서 카드의 멘션 메타 fetch를 메모이즈 없이 호출                                 | Notion 평균 3 req/s rate limit burst → 빌드 시 429 발생 가능 (5.6 강제)                      |
+| 20  | F019 동일 분류 추천을 단일 query에서 `id != currentId` 시도                                | Notion API의 `does_not_equal` ID 필터 부재 — LIMIT (limit+1) 후 클라이언트 후처리 강제 (5.6) |
+| 21  | F016 TL;DR 추출에서 placeholder 본문 fall-through 누락                                     | 비기획자 진입 첫 박스가 `✏️ [작성 필요]` 등으로 노출되어 PRD v2 정성 지표 실패               |
+| 22  | `Post.status` 영문 키 사용 (Notion `상태` 속성과 혼동)                                     | 영문 키는 `Post.publication`(5.2 매핑 표 참조). 인지 오류 방지                               |
+| 23  | `docs/PRD.archive.md` / `docs/ROADMAP.archive.md` 변경/삭제                                | 초기 골격 보존본 — 절대 변경 금지                                                            |
 
 ---
 
@@ -377,13 +424,14 @@ PRD 기능 ID(F001~F014) 추가/제거/변경 시 다음을 함께 갱신:
 
 ### 13.3 활성 MCP 서버 우선순위
 
-| MCP 서버              | 사용 시점                                  |
-| --------------------- | ------------------------------------------ |
-| `context7`            | 라이브러리/SDK/프레임워크 문서 조회 (10.1) |
-| `shadcn`              | shadcn 컴포넌트 발견/추가 (6.1, 10.2)      |
-| `playwright`          | UI/E2E 검증 (10.4)                         |
-| `shrimp-task-manager` | 프로젝트 규약/Task 관리                    |
-| `sequential-thinking` | 복잡한 다단계 분석 (선택적)                |
+| MCP 서버              | 사용 시점                                                                                |
+| --------------------- | ---------------------------------------------------------------------------------------- |
+| `context7`            | 라이브러리/SDK/프레임워크 문서 조회 (10.1)                                               |
+| `shadcn`              | shadcn 컴포넌트 발견/추가 (6.1, 10.2)                                                    |
+| `playwright`          | UI/E2E 검증 (10.4)                                                                       |
+| `claude_ai_Notion`    | Notion DB 스키마 점검(`notion-fetch`)/속성 추가(`notion-update-data-source`)/페이지 검증 |
+| `shrimp-task-manager` | 프로젝트 규약/Task 관리                                                                  |
+| `sequential-thinking` | 복잡한 다단계 분석 (선택적)                                                              |
 
 ---
 
