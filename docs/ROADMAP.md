@@ -83,7 +83,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
 
 ---
 
-### Phase 1: 애플리케이션 골격 구축
+### Phase 1: 애플리케이션 골격 구축 ✅
 
 라우트 구조와 빈 페이지 셸, 도메인 타입을 우선 확보하는 단계입니다. UI/데이터 작업이 병렬로 진행될 수 있도록 골격부터 완성합니다.
 
@@ -128,7 +128,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
   - **검증 기준**: Playwright MCP로 5개 URL 직접 진입 → 200 응답 + 헤더/푸터 노출 확인 ✅
   - See: /docs/tasks/002-route-shell-and-layout.md
 
-- **Task 003: 도메인 타입, Zod 스키마, 큐레이션 모듈 정의 (v2 확장)**
+- ✅ **Task 003: 도메인 타입, Zod 스키마, 큐레이션 모듈 정의 (v2 확장)** — 완료
   - shrimp ID: `34264159` (Phase 1-003 도메인 타입 및 Zod 스키마 정의 — 신규 6개 속성 + persona-curation + site-config 포함)
   - `src/types/post.ts`에 다음 도메인 타입 정의:
     - `Post`: id / slug / title / summary? / category / tags / publishedAt / **publication**("발행됨"|"초안") / coverImage? / **readerLevel?**("입문"|"중급"|"심화"|null) / **recommendOrder?**(number|null)
@@ -145,6 +145,7 @@ ProjectTILLAGE-Docs는 Notion으로 기획서를 관리하는 1인 기획자/개
   - **산출물**: 데이터 레이어/UI가 공유할 단일 타입 소스 + 큐레이션 정적 모듈 2개(`site-config.ts`, `persona-curation.ts`)
   - **의존성**: Task 002 완료, 사용자 Notion DB 6개 속성 추가 완료
   - **검증 기준**: `npm run typecheck` 통과, Zod 스키마 단위 테스트(임시 fixture)로 한글 속성 8개 모두 파싱 성공, persona-curation 매핑이 5개 페르소나 × 서로 다른 분류 묶음을 가지는지 단순 단언
+  - See: /docs/tasks/003-domain-types-and-curation.md
 
 ---
 
